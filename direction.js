@@ -10,7 +10,7 @@ var init = function() {
     cnvasi[0].height=480;
     cnvasi[0].width=640;
     cnvasi[0].style.background="#FFF";
-    cnvasi[0].style.zIndex=1;
+    cnvasi[0].style.zIndex=0;
     cnvasi[0].style.position="absolute";
     var object = {
         context: cnvasi[0].getContext('2d'),
@@ -26,11 +26,16 @@ var init = function() {
     window.setInterval(loadD, 1000 / 30, object);
     /*carousel*/
     var imageFiles = ["img/oots0001.gif","img/oots0002.gif","img/oots0003.gif","img/oots0004.gif","img/oots0005.gif","img/oots0006.gif","img/oots0007.gif","img/oots0008.gif","img/oots0009.gif","img/oots0010.gif","img/oots0011.gif","img/oots0012.gif","img/oots0013.gif","img/oots0014.gif","img/oots0015.gif","img/oots0016.gif","img/oots0017.gif","img/oots0018.gif","img/oots0019.gif","img/oots0020.gif"];
+    var iimgs = [];//script.pages;
     var images = [];
+    var master = new Image();
+    var pbuffer = [];
+    
+    
     pages = imageFiles.length;
     cnvasi[1].height=480;
     cnvasi[1].width=640;
-    cnvasi[1].style.zIndex=2;
+    cnvasi[1].style.zIndex=1;
     cnvasi[1].style.position="absolute";
     var context = cnvasi[1].getContext('2d');
     document.body.appendChild(cnvasi[1]);
