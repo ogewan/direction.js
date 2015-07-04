@@ -11,7 +11,7 @@ var anchor = document.body;
 var foo = new direction(input,anchor);
 ```
   * input - **REQUIRED** - can either be a single image source, an array of image sources, or a correctly formatted object.*
-  * anchor - *OPTIONAL* - an HTMLelement to append the carousel to. By default it will attach to the body.**
+  * anchor - *OPTIONAL* - an HTMLelement to append the carousel to. By default, it will attach to the body.**
 
 Now at this point, you'd probably be wondering why it isn't doing anything. All the other carousels, you've tried did moved around fancily flipping through images and stuff. You might even be prompted to ask, "Seun40, why isn't it doing anything?". And to that I answer, that's what it's supposed to do.
 
