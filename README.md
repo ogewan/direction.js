@@ -1,2 +1,23 @@
 # direction.js
-MicroLib Canvas Carousel
+MicroLib Canvas Carousel built for [comix-ngn] as smaller, canvas only alternative to [Swipe], [Slack], [Bootstrap Carousel], and [other carousels].
+
+***Since its Canvas only, it doesn't require any CSS***
+##Usage
+* You can set the constructor to any dang var you want, by default it is "direction". Simply use new "direction"(input, anchor) to create the carousel.
+
+```
+var input = ["0.png","1.png","2.png","3.png"];
+var anchor = document.body;
+var foo = new direction(input,anchor);
+```
+  * input - **REQUIRED** - can either be a single image source, an array of image sources, or a correctly formatted object.*
+  * anchor - *OPTIONAL* - an HTMLelement to append the carousel to. By default it will attach to the body.**
+
+*I say direction can take an object as an argument, but __DO NOT USE AN OBJECT__. I only included the object parameter for completeness. Unlike the string and array of strings, the object is assumed to be correct, but only works correctly for the formatted JSON objects in [comix-ngn]. Unless your object is formatted exactly the same, it will break the function.
+**Because it attaches to an element in the DOM, please make sure that the DOM is loaded/ready before you call direction(). If you don't it will immediately hit a "[cannot call method 'appendChild' of null]" error.
+[comix-ngn]: http://comixngn.js.org/
+[Swipe]: http://kenwheeler.github.io/slick/
+[Slack]: https://github.com/thebird/swipe
+[Bootstrap Carousel]: http://getbootstrap.com/javascript/
+[other carousels]: https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=carousels&es_th=1
+[cannot call method 'appendChild' of null]: http://stackoverflow.com/questions/8670530/javascript-error-cannot-call-method-appendchild-of-null
