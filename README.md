@@ -3,6 +3,30 @@ MicroLib Canvas Carousel built for [comix-ngn] as smaller, canvas only alternati
 
 ***Since its Canvas only, it doesn't require any CSS***
 ##Usage
+* First, your gonna want to import it. You can do this with your typical: 
+   
+  ```<script src="direction.min.js"></script>```
+  
+  But I actually recommend **deferring** it with [Patrick Sexton's method on feedthebot]:
+
+  ``` html
+  <script>
+  function defer() {
+	var element = document.createElement("script");
+	element.src = "direction.js";
+	document.body.appendChild(element);
+  }
+  if (window.addEventListener)
+	window.addEventListener("load", defer, false);
+  else if (window.attachEvent)
+    window.attachEvent("onload", defer);
+  else window.onload = defer;
+  </script>
+  ```
+  Oh and almost forgot, direction.js comes in three flavors:
+  * direction.js - the uncompressed file, for development and debugging
+  * direction.min.js - the minified file, for production **[Recommended]**
+  * direction.nan.js - the wild child, I mean *nanofied* file, mainly proof of concept. Uses [Google's Closure Compiler] Advanced Optimizations. It has been tested to work and *should* perform exactly like its big sisters, but I make no promises. It is 858 bytes smaller than min, so you gain that for its *creativity* ;).
 * You can set the constructor to any dang var you want, by default it is "direction". Simply use new "direction"(input, anchor) to create the carousel.
 
 ``` js
@@ -35,9 +59,20 @@ window.setInterval(foo.next,1000);//Auto scrolls through Webcomic from first to 
 
 `rand()` - go to a random slide
 
-`.current` - gives the current slide, **PLEASE DON'T MODIFY IT**
+`current()` - gets the current slide
 
-`.count` - gives the total amount of slides, **PLEASE DON'T MODIFY IT**
+`count()` - gets the total amount of slides
+
+`callback(type,function)` - gets/sets a slide transition callback
+* slides/pages have three states:
+  * slidestart (type: -1) - called when at the beginning of a slide transition
+  * sliding (type: 0) - called in the middle of a slide transition
+  * slidend (type: 1) - called once a slide transition finishes
+* When called with no arguments, callback **gets** the sliding callback
+* When called with one argument, type, it **gets** the corresponding callback of that type
+* When called with a type and a function, it **sets** the callback of the state of given type
+  
+   I.E ```canvas(-1,foo);``` will set the callback of slidestart to foo
 
 ## Browser Support
 Although I haven't tested it in anything but my browser, cause I'm bad at programming :P, It requires **requires** canvas so...
@@ -45,7 +80,7 @@ Although I haven't tested it in anything but my browser, cause I'm bad at progra
 is a good guide
 
 ## TODO
-* Secure variables and methods that don't need to be public, i.e replacing current and count with getter functions.
+* ~~Secure variables and methods that don't need to be public, i.e replacing current and count with getter functions.~~
 * Scrollto implementation
 
 _*I say direction can take an object as an argument, but_ **_DO NOT USE AN OBJECT_** _. I only included the object parameter for completeness. Unlike the string and array of strings, the object is assumed to be correct, but only works correctly for the formatted JSON objects in [comix-ngn]. Unless your object is formatted exactly the same, it will break the function._
@@ -55,9 +90,11 @@ _**Because it attaches to an element in the DOM, please make sure that the DOM i
 
 [comix-ngn]: http://comixngn.js.org/
 [Swipe]: http://kenwheeler.github.io/slick/
+[Patrick Sexton's method on feedthebot]: https://www.feedthebot.com/pagespeed/defer-loading-javascript.html
+[Google's Closure Compiler]: https://developers.google.com/closure/compiler/
 [Slack]: https://github.com/thebird/swipe
 [Bootstrap Carousel]: http://getbootstrap.com/javascript/
 [other carousels]: https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=carousels&es_th=1
 [cannot call method 'appendChild' of null]: http://stackoverflow.com/questions/8670530/javascript-error-cannot-call-method-appendchild-of-null
 [1]: http://caniuse.com/#feat=canvas
-[2]: http://i.snag.gy/TG0rl.jpg
+[2]: http://i.snag.gy/VcmK1.jpg
