@@ -48,7 +48,7 @@ is a good guide
 * Secure variables and methods that don't need to be public, i.e replacing current and count with getter functions.
 * Scrollto implementation
 
-_*I say direction can take an object as an argument, but __DO NOT USE AN OBJECT__. I only included the object parameter for completeness. Unlike the string and array of strings, the object is assumed to be correct, but only works correctly for the formatted JSON objects in [comix-ngn]. Unless your object is formatted exactly the same, it will break the function._
+_*I say direction can take an object as an argument, but_ **_DO NOT USE AN OBJECT_** _. I only included the object parameter for completeness. Unlike the string and array of strings, the object is assumed to be correct, but only works correctly for the formatted JSON objects in [comix-ngn]. Unless your object is formatted exactly the same, it will break the function._
 
 _**Because it attaches to an element in the DOM, please make sure that the DOM is loaded/ready before you call direction(). If you don't it will immediately hit a "[cannot call method 'appendChild' of null]" error._
 
