@@ -177,7 +177,7 @@
         }
         this.go = function(to){
             var sre = (to===null||void 0===to)?0:parseInt(to,10);
-            console.log(sre);
+            //console.log(sre);
             sre = (isNaN(sre))?0:sre;
             assign(master,(Math.floor(Math.max(0,Math.min(count-1,sre)))));
             return sre;
