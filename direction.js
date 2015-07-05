@@ -22,7 +22,7 @@
             //self = this,//we don't need self anymore because, the public methods that require it aren't utlized in private methods //that
         var iimg = input.pages,
             count= input.pages.length,
-            intervall,
+            //intervall,
             spinning=true,//is the spinner spinning?
             current= -1,//-1 for unset, corresponds to current page,
             spinner = input.loading,
@@ -50,7 +50,8 @@
                 cW: spinner.width,
                 cH: spinner.height,
                 acW: layers[1].width,
-                acH: layers[1].height
+                acH: layers[1].height,
+                rate: spinner.rate
             },
             spin = function(a){//handles spinner(Loader)
                 //var rotation = ((Date.now() - a.start) / 1000) * a.lines / a.lines,
@@ -76,6 +77,7 @@
                     a.context.stroke();
                 }
                 a.context.restore();
+                if(spinning) window.setTimeout(spin, a.rate, object);
             },
             scrollit = function(to,time){
                 //format inputs
@@ -120,8 +122,8 @@
                 current = this.imaginaryID;
                 /*console.log("killing",intervall);
                 window.clearInterval(intervall);
-                intervall=-1;
-                spinning=0;*/
+                intervall=-1;*/
+                spinning=0;
                 if(skroll) scrollit();
                 slidend();
             },
@@ -129,8 +131,9 @@
                 //console.log("World");
                 /*console.log("dead",intervall);
                 if(intervall<0) intervall = window.setInterval(spin, spinner.rate, object);
-                console.log("started",intervall);
-                spinning=!0;*/
+                console.log("started",intervall);*/
+                spinning=true;
+                window.setTimeout(spin, spinner.rate, object);
                 slidestart();
                 if(!iimg[idd].loaded) context.clearRect(0, 0, layers[1].width, layers[1].height);
                 imagething.imaginaryID = idd;
@@ -221,7 +224,8 @@
         if(anchor) anchor.appendChild(layers[0]);
         else document.body.appendChild(layers[0]);
         //console.log(object);
-        intervall=window.setInterval(spin, spinner.rate, object);
+        //intervall=window.setInterval(spin, spinner.rate, object);
+        window.setTimeout(spin, spinner.rate, object);
         //DISPLAY - setup
         master = new Image();
         master.imaginaryID = -1;//unset to an imaginary image

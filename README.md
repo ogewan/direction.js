@@ -98,7 +98,9 @@ is a good guide
 ## TODO
 * ~~Secure variables and methods that don't need to be public, i.e replacing current and count with getter functions.~~
 * ~~Scrollto implementation~~
-* Efficient spinner, currently spinner is always animated, since it uses setInterval, using requestAnimationFrame alone would cut my userbase so I need the fallback, but the first issue is getting the fallback to work.
+* ~~Efficient spinner, currently spinner is always animated, since it uses setInterval, using requestAnimationFrame alone would cut my userbase so I need the fallback, but the first issue is getting the fallback to work.~~
+  * Addendum: setInterval replaced with setTimeout, so now the spinner pauses when a slide is displayed. Granted, requestAnimationFrame should theoretically do better than setTimeout, setTimeout preserves compatibility and only active when no slides are visible, which is when they are loading, so in this case the costs are much greater than the benefits.
+* _direction.js is more or less finished for now, development focus will return back to comix-ngn. Any changes to direction.js should be only optimization and file size reduction._
 
 _*I say direction can take an object as an argument, but_ **_DO NOT USE AN OBJECT_** _. I only included the object parameter for completeness. Unlike the string and array of strings, the object is assumed to be correct, but only works correctly for the formatted JSON objects in [comix-ngn]. Unless your object is formatted exactly the same, it will break the function._
 
