@@ -26,7 +26,7 @@ MicroLib Canvas Carousel built for [comix-ngn] as smaller, canvas only alternati
   Oh and almost forgot, direction.js comes in three flavors:
   * direction.js - the uncompressed file, for development and debugging
   * direction.min.js - the minified file, for production **[Recommended]**
-  * direction.nan.js - the wild child, I mean *nanofied* file, mainly proof of concept. Uses [Google's Closure Compiler] Advanced Optimizations. It has been tested to work and *should* perform exactly like its big sisters, but I make no promises. It is 858 bytes smaller than min, so you gain that for its *creativity* ;).
+  * direction.nan.js - the wild child, I mean *nanofied* file, mainly proof of concept. Uses [Google's Closure Compiler] Advanced Optimizations. It has been tested to work and *should* perform exactly like its big sisters, but I make no promises. It is ~858 bytes smaller than min, so you gain that for its *creativity* ;).
 * You can set the constructor to any dang var you want, by default it is "direction". Simply use new "direction"(input, anchor) to create the carousel.
 
 ``` js
@@ -47,6 +47,7 @@ window.setInterval(foo.next,1000);//Auto scrolls through Webcomic from first to 
 ```
 
 ##API
+
 `go(index)` - go to the slide at index
 
 `frst()` - go to the first slide
@@ -62,6 +63,21 @@ window.setInterval(foo.next,1000);//Auto scrolls through Webcomic from first to 
 `current()` - gets the current slide
 
 `count()` - gets the total amount of slides
+
+`scroll()` - gets/sets the status of the auto scroll. To auto scroll to the top of the page on slide change, set to true,. To disable, set it to false. It is true by default
+
+`scrollTo(place,time)` - scroll to place in given time (milliseconds)
+* if no arguments are given, it scrolls to the top left (0,0) in default time
+
+* if given a place that is a number, it will assume that place is a vertical coordinate
+
+* place can also be an object with x and y properties corresponding to horizontal and vertical position respectively
+
+* if not given a time, the default duration is 400 milliseconds
+
+* if a negative value is given for place, it scrolls to the opposite position.
+  
+   I.E ```scrollTo({-1,-1});``` will scroll to the bottom right in default time
 
 `callback(type,function)` - gets/sets a slide transition callback
 * slides/pages have three states:
@@ -81,7 +97,8 @@ is a good guide
 
 ## TODO
 * ~~Secure variables and methods that don't need to be public, i.e replacing current and count with getter functions.~~
-* Scrollto implementation
+* ~~Scrollto implementation~~
+* Efficient spinner, currently spinner is always animated, since it uses setInterval, using requestAnimationFrame alone would cut my userbase so I need the fallback, but the first issue is getting the fallback to work.
 
 _*I say direction can take an object as an argument, but_ **_DO NOT USE AN OBJECT_** _. I only included the object parameter for completeness. Unlike the string and array of strings, the object is assumed to be correct, but only works correctly for the formatted JSON objects in [comix-ngn]. Unless your object is formatted exactly the same, it will break the function._
 
