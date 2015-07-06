@@ -12,14 +12,8 @@
             input = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,width:250,height:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[{alt:"",hover:"",title:"",url:[input],release:0,note:"",perm:!1,anim8:!1}],chapters:[]};
         } else if(Array.isArray(input)){
             var holdr = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,width:250,height:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[],chapters:[]};
-            var subholdr;
             for(var q = 0;q<input.length;q++){
-                holdr.pages.push({alt:"",hover:"",title:"",url:[],release:0,note:"",perm:!1,anim8:!1});
-                if(Array.isArray(input[q])){
-                    for(var w = 0;w<input[q].length;w++){
-                        holdr.pages[q].url.push(input[q][w]);
-                    }
-                } else holdr.pages[q].url.push(input[q]);
+                holdr.pages.push({alt:"",hover:"",title:"",url:input[q],release:0,note:"",perm:!1,anim8:!1});
             }
             input = holdr;
         } else if(void 0 === input.pages[0].url) return -1;
@@ -143,7 +137,7 @@
                 slidestart();
                 if(!iimg[idd].loaded) context.clearRect(0, 0, layers[1].width, layers[1].height);
                 imagething.imaginaryID = idd;
-                imagething.src = config.dir+iimg[idd].url[0];
+                imagething.src = config.dir+iimg[idd].url;
                 /*console.log("----");
             for(var q = idd-1;q>idd-self.config.imgprebuffer-1&&q>=0;q--){
                 console.log(q);

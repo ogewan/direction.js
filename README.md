@@ -27,6 +27,8 @@ MicroLib Canvas Carousel built for [comix-ngn] as smaller, canvas only alternati
   * direction.js - the uncompressed file, for development and debugging
   * direction.min.js - the minified file, for production **[Recommended]**
   * direction.nan.js - the wild child, I mean *nanofied* file, mainly proof of concept. Uses [Google's Closure Compiler] Advanced Optimizations. It has been tested to work and *should* perform exactly like its big sisters, but I make no promises. It is ~858 bytes smaller than min, so you gain that for its *creativity* ;).
+  * ***New** Direction.js Plus Edition: To keep the main file under 5KB minified, I created a new edition called directionpl.js. It is functionally identical to the standard edition, and comes in the same flavors but adds functionality for video and animated gifs. It is temporary until I can fit it into the standard.
+
 * You can set the constructor to any dang var you want, by default it is "direction". Simply use new "direction"(input, anchor) to create the carousel.
 
 ``` js
@@ -101,6 +103,8 @@ is a good guide
 * ~~Efficient spinner, currently spinner is always animated, since it uses setInterval, using requestAnimationFrame alone would cut my userbase so I need the fallback, but the first issue is getting the fallback to work.~~
   * Addendum: setInterval replaced with setTimeout, so now the spinner pauses when a slide is displayed. Granted, requestAnimationFrame should theoretically do better than setTimeout, setTimeout preserves compatibility and only active when no slides are visible, which is when they are loading, so in this case the costs are much greater than the benefits.
 * _direction.js is more or less finished for now, development focus will return back to comix-ngn. Any changes to direction.js should be only optimization and file size reduction._
+* Add video and animated gif support, because this will violate the size constraints of a MicroLib, this functionality will only be present in an alternate file called directionpl.js
+* Adding video and animated gif support while keeping min file under 5KB.
 
 _*I say direction can take an object as an argument, but_ **_DO NOT USE AN OBJECT_** _. I only included the object parameter for completeness. Unlike the string and array of strings, the object is assumed to be correct, but only works correctly for the formatted JSON objects in [comix-ngn]. Unless your object is formatted exactly the same, it will break the function._
 
