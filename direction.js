@@ -55,7 +55,7 @@
                 lines: spinner.lines,
                 diameter: spinner.diameter,
                 //cwidth: layers[1].width, 300
-                //cheight: layers[1].height, 480
+                cheight: layers[1].height,// 480
                 rate: spinner.rate
             },
             spin = function(a){//handles spinner(Loader)
@@ -63,8 +63,8 @@
                 var rotation = Math.floor(((Date.now() - a.start) / 1000) * a.lines) / a.lines,
                     c = a.color.substr(1);
                 a.context.save();
-                a.context.clearRect(0, 0, 300, 480);
-                a.context.translate(150, 240);
+                a.context.clearRect(0, 0, 300, c.height/2);
+                a.context.translate(150, c.height/2);
                 a.context.rotate(Math.PI * 2 * rotation);
                 if (c.length == 3) c = c[0] + C[0] + c[1] + c[1] + c[2] + c[2];//duplicate as per spec
                 var red = parseInt(c.substr(0, 2), 16).toString(),
@@ -120,7 +120,7 @@
                 sliding();
                 //conviently, this callback draws the image as soon as master's src is changed and image loaded
                 layers[1].width /*= layers[0].width = objref.acW */= this.width;
-                layers[1].height /*= layers[0].height = objref.acH*/ = this.height;
+                layers[1].height = layers[0].height /*= objref.acH*/ = this.height;
                 context.drawImage(this,0,0);
                 current = this.imaginaryID;
                 /*console.log("killing",intervall);
@@ -211,7 +211,7 @@
             return sre;
         }
         this.data = function(to){//returns info about slide
-            var sre = (to===null||void 0===to)?0:parseInt(to,10);
+            var sre = (to===null||void 0===to)?current:parseInt(to,10);
             return (isNaN(sre))?iimg[current]:iimg[sre];
         }
         this.scroll = function(bool){//toggles Auto Scrolling
