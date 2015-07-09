@@ -2,16 +2,16 @@
     /**
      * @suppress {globalThis}
      */
-    var direction = function(input,anchor){
+    direction = function(input,anchor){
         //input - an object, list, or string
         //anchor - the html object to append
         //INITIAL SETUP - Ensures input is the correct format, or dies trying
         if(void 0===input){
             return -1;
         } else if(typeof input==='string'){
-            input = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,width:250,height:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[{alt:"",hover:"",title:"",url:[input],release:0,note:"",perm:!1,anim8:!1}],chapters:[]};
+            input = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,diameter:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[{alt:"",hover:"",title:"",url:[input],release:0,note:"",perm:!1,anim8:!1}],chapters:[]};
         } else if(Array.isArray(input)){
-            var holdr = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,width:250,height:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[],chapters:[]};
+            var holdr = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,diameter:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[],chapters:[]};
             var subholdr;
             for(var q = 0;q<input.length;q++){
                 holdr.pages.push({alt:"",hover:"",title:"",url:[],release:0,note:"",perm:!1,anim8:!1});
@@ -39,7 +39,7 @@
             preload = [],
             master = new Image(),
             skroll = true,
-            objref = {acW:300,acH:300},//the purpose of objref, is to allow dynamic canvas resizing in layer 0
+            //objref = {acW:300,acH:300},//the purpose of objref, is to allow dynamic canvas resizing in layer 0
             layers = [document.createElement("canvas"), document.createElement("canvas")],//By default, we have the display layer and the loading layer
             //console.log(this.layers[1]);
             context = layers[1].getContext('2d'),//display context for drawing
@@ -53,36 +53,32 @@
                 color: spinner.color,
                 start: Date.now(),
                 lines: spinner.lines,
-                cW: spinner.width,
-                cH: spinner.height,
-                acW: layers[1].width,
-                acH: layers[1].height,
+                diameter: spinner.diameter,
+                cwidth: layers[1].width,
+                cheight: layers[1].height,
                 rate: spinner.rate
             },
             spin = function(a){//handles spinner(Loader)
-                //var rotation = ((Date.now() - a.start) / 1000) * a.lines / a.lines,
-                var rotation = Math.floor(((Date.now() - a.start) / 1000) * a.lines)/a.lines,
+                var rotation = Math.floor(((Date.now() - a.start) / 1000) * a.lines) / a.lines,
                     c = a.color.substr(1);
                 a.context.save();
-                a.context.clearRect(0, 0, a.acW, a.acH);
-                //console.log(rotation,rrotation, a.start,a.lines);
-                a.context.translate(a.acW /2, a.acH /2);
+                a.context.clearRect(0, 0, a.cwidth, a.cheight);
+                a.context.translate(a.cwidth / 2, a.cheight / 2);
                 a.context.rotate(Math.PI * 2 * rotation);
-                //console.log(a.color);
-                if(c.length==3) c = c[0]+C[0]+c[1]+c[1]+c[2]+c[2];//duplicate as per spec
-                var red = parseInt(c.substr(0,2),16).toString(),
-                    green = parseInt(c.substr(2,2),16).toString(),
-                    blue = parseInt(c.substr(4,2),16).toString();
+                if (c.length == 3) c = c[0] + C[0] + c[1] + c[1] + c[2] + c[2];//duplicate as per spec
+                var red = parseInt(c.substr(0, 2), 16).toString(),
+                    green = parseInt(c.substr(2, 2), 16).toString(),
+                    blue = parseInt(c.substr(4, 2), 16).toString();
                 for (var i = 0; i < a.lines; i++) {
                     a.context.beginPath();
                     a.context.rotate(Math.PI * 2 / a.lines);
-                    a.context.moveTo(a.cW / 10, 0);
-                    a.context.lineTo(a.cW / 4, 0);    
-                    a.context.lineWidth = a.cW / 30;
-                    a.context.strokeStyle = "rgba("+red+","+green+","+blue+"," + i / a.lines + ")";
+                    a.context.moveTo(a.diameter / 10, 0);
+                    a.context.lineTo(a.diameter / 4, 0);
+                    a.context.lineWidth = a.diameter / 30;
+                    a.context.strokeStyle = "rgba(" + red + "," + green + "," + blue + "," + i / a.lines + ")";
                     a.context.stroke();
                 }
-                a.context.restore();
+                a.context.restore()
                 if(spinning) window.setTimeout(spin, a.rate, object);
             },
             scrollit = function(to,time){
@@ -122,8 +118,8 @@
                 else iimg[this.imaginaryID].loaded = true;
                 sliding();
                 //conviently, this callback draws the image as soon as master's src is changed and image loaded
-                layers[1].width = layers[0].width = objref.acW = this.width;
-                layers[1].height = layers[0].height = objref.acH = this.height;
+                layers[1].width = layers[0].width /*= objref.acW */= this.width;
+                layers[1].height = layers[0].height /*= objref.acH*/ = this.height;
                 context.drawImage(this,0,0);
                 current = this.imaginaryID;
                 /*console.log("killing",intervall);
@@ -225,7 +221,7 @@
         layers[0].style.zIndex=0;
         layers[0].style.position="absolute";
 
-        objref = object;
+        //objref = object;
         //console.log(layers[1]);
         if(anchor) anchor.appendChild(layers[0]);
         else document.body.appendChild(layers[0]);
