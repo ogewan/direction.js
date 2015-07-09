@@ -2,17 +2,16 @@
     /**
      * @suppress {globalThis}
      */
-    direction = function(input,anchor){
+    direction = function(input,anchor,owrite){
         //input - an object, list, or string
         //anchor - the html object to append
         //INITIAL SETUP - Ensures input is the correct format, or dies trying
+        var holdr = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,diameter:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[]};
         if(void 0===input){
             return -1;
         } else if(typeof input==='string'){
-            input = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,diameter:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[{alt:"",hover:"",title:"",url:[input],release:0,note:"",perm:!1,anim8:!1}],chapters:[]};
+            holdr.pages.push({alt:"",hover:"",title:"",url:[input],release:0,note:"",perm:!1,anim8:!1});
         } else if(Array.isArray(input)){
-            var holdr = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,diameter:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[],chapters:[]};
-            var subholdr;
             for(var q = 0;q<input.length;q++){
                 holdr.pages.push({alt:"",hover:"",title:"",url:[],release:0,note:"",perm:!1,anim8:!1});
                 if(Array.isArray(input[q])){
@@ -21,8 +20,8 @@
                     }
                 } else holdr.pages[q].url.push(input[q]);
             }
-            input = holdr;
         } else if(void 0 === input.pages[0].url) return -1;
+        input = holdr;
         if(void 0 === anchor||anchor == null) anchor = 0;
         //PROPERTIES - private
             //self = this,//we don't need self anymore because, the public methods that require it aren't utlized in private methods //that
@@ -54,16 +53,17 @@
                 start: Date.now(),
                 lines: spinner.lines,
                 diameter: spinner.diameter,
-                cwidth: layers[1].width,
-                cheight: layers[1].height,
+                //cwidth: layers[1].width, 300
+                //cheight: layers[1].height, 480
                 rate: spinner.rate
             },
             spin = function(a){//handles spinner(Loader)
+                layers[0].style.paddingLeft=((layers[1].width-300)/2)+"px";
                 var rotation = Math.floor(((Date.now() - a.start) / 1000) * a.lines) / a.lines,
                     c = a.color.substr(1);
                 a.context.save();
-                a.context.clearRect(0, 0, a.cwidth, a.cheight);
-                a.context.translate(a.cwidth / 2, a.cheight / 2);
+                a.context.clearRect(0, 0, 300, 480);
+                a.context.translate(150, 240);
                 a.context.rotate(Math.PI * 2 * rotation);
                 if (c.length == 3) c = c[0] + C[0] + c[1] + c[1] + c[2] + c[2];//duplicate as per spec
                 var red = parseInt(c.substr(0, 2), 16).toString(),
@@ -118,8 +118,8 @@
                 else iimg[this.imaginaryID].loaded = true;
                 sliding();
                 //conviently, this callback draws the image as soon as master's src is changed and image loaded
-                layers[1].width = layers[0].width /*= objref.acW */= this.width;
-                layers[1].height = layers[0].height /*= objref.acH*/ = this.height;
+                layers[1].width /*= layers[0].width = objref.acW */= this.width;
+                layers[1].height /*= layers[0].height = objref.acH*/ = this.height;
                 context.drawImage(this,0,0);
                 current = this.imaginaryID;
                 /*console.log("killing",intervall);
@@ -209,6 +209,10 @@
             assign(master,sre);
             return sre;
         }
+        this.data = function(to){//returns info about slide
+            var sre = (to===null||void 0===to)?0:parseInt(to,10);
+            return (isNaN(sre))?iimg[current]:iimg[sre];
+        }
         this.scroll = function(bool){//toggles Auto Scrolling
             if(bool===null||void 0===bool) return skroll;
             return skroll=bool;
@@ -216,8 +220,9 @@
         this.scrollTo = function(to,time){return scrollit(to,time);}//public wrapper for scrollit
         //LOADER - setup
         layers[0].height=480;
-        layers.width=640;
+        //layers[0].width=640;
         layers[0].style.background=spinner.back;
+        layers[0].style.paddingLeft="170px";
         layers[0].style.zIndex=0;
         layers[0].style.position="absolute";
 
@@ -250,11 +255,14 @@
         }
         //preload[0].imaginaryID = 0;
         //preload[0].src = input.pages[0].url;
+        //init
+        assign(master,(owrite===void 0||owrite===null)?config.startpage:owrite);
+        //end init
         layers[1].height=480;
         layers[1].width=640;
         layers[1].background = config.back;
         layers[1].style.zIndex=1;
-        layers[1].style.position="absolute";
+        layers[1].style.position="relative";
         if(anchor) anchor.appendChild(layers[1]);
         else document.body.appendChild(layers[1]);
     }
