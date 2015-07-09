@@ -11,6 +11,7 @@
             return -1;
         } else if(typeof input==='string'){
             holdr.pages.push({alt:"",hover:"",title:"",url:[input],release:0,note:"",perm:!1,anim8:!1});
+            input = holdr;
         } else if(Array.isArray(input)){
             for(var q = 0;q<input.length;q++){
                 holdr.pages.push({alt:"",hover:"",title:"",url:[],release:0,note:"",perm:!1,anim8:!1});
@@ -20,8 +21,8 @@
                     }
                 } else holdr.pages[q].url.push(input[q]);
             }
+            input = holdr;
         } else if(void 0 === input.pages[0].url) return -1;
-        input = holdr;
         if(void 0 === anchor||anchor == null) anchor = 0;
         //PROPERTIES - private
             //self = this,//we don't need self anymore because, the public methods that require it aren't utlized in private methods //that
