@@ -55,18 +55,18 @@
                 lines: spinner.lines,
                 diameter: spinner.diameter,
                 //cwidth: layers[1].width, 300
-                cheight: layers[1].height,// 480
+                //cheight: layers[1].height,// 480
                 rate: spinner.rate
             },
-            spin = function(a){//handles spinner(Loader)
+            spin = function(a) {
                 layers[0].style.paddingLeft=((layers[1].width-300)/2)+"px";
                 var rotation = Math.floor(((Date.now() - a.start) / 1000) * a.lines) / a.lines,
                     c = a.color.substr(1);
                 a.context.save();
-                a.context.clearRect(0, 0, 300, c.height/2);
-                a.context.translate(150, c.height/2);
+                a.context.clearRect(0, 0, 300, layers[1].height);
+                a.context.translate(150, layers[1].height/2);
                 a.context.rotate(Math.PI * 2 * rotation);
-                if (c.length == 3) c = c[0] + C[0] + c[1] + c[1] + c[2] + c[2];//duplicate as per spec
+                if (c.length == 3) c = c[0] + C[0] + c[1] + c[1] + c[2] + c[2];
                 var red = parseInt(c.substr(0, 2), 16).toString(),
                     green = parseInt(c.substr(2, 2), 16).toString(),
                     blue = parseInt(c.substr(4, 2), 16).toString();
@@ -79,7 +79,7 @@
                     a.context.strokeStyle = "rgba(" + red + "," + green + "," + blue + "," + i / a.lines + ")";
                     a.context.stroke();
                 }
-                a.context.restore()
+                a.context.restore();
                 if(spinning) window.setTimeout(spin, a.rate, object);
             },
             scrollit = function(to,time){
@@ -171,10 +171,10 @@
         this.current = function(){return current;}
         this.callback = function(type,callback){
             if(type===null||void 0===type) return sliding;
-            if(callback===null||void 0===callback) return (type)?(type>0)?slidestart:slidend:sliding;
+            if(callback===null||void 0===callback) return (type)?(type>0)?slidend:slidestart:sliding;
             if(type)
-                if(type>0) slidestart = callback;
-                else slidend = callback;
+                if(type>0) slidend = callback;
+                else slidestart = callback;
             else sliding = callback;
             return 1;
         }
@@ -257,13 +257,14 @@
         //preload[0].imaginaryID = 0;
         //preload[0].src = input.pages[0].url;
         //init
-        assign(master,(owrite===void 0||owrite===null)?config.startpage:owrite);
+        assign(master,(owrite===void 0||owrite===null||isNaN(owrite))?config.startpage:owrite);
         //end init
         layers[1].height=480;
         layers[1].width=640;
         layers[1].background = config.back;
         layers[1].style.zIndex=1;
         layers[1].style.position="relative";
+        //layers[1].style.visibility="hidden";
         if(anchor) anchor.appendChild(layers[1]);
         else document.body.appendChild(layers[1]);
     }

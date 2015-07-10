@@ -86,6 +86,26 @@ window.setInterval(foo.next,1000);//Auto scrolls through Webcomic from first to 
   * slidestart (type: -1) - called when at the beginning of a slide transition
   * sliding (type: 0) - called in the middle of a slide transition
   * slidend (type: 1) - called once a slide transition finishes
+``` js
+assign = function() {//Assigns images to various buffers
+        //Activate Loading Spinner
+        slidestart();//Called as soon as slide transition has begun
+        //Check if image is loaded, if not wait till it loads
+        //assign master to image so canvas can draw it, calls preloadMaster
+        //preload neighbor images
+    }
+preloadMaster = function() { //loads and draws images to Canvas
+        //waits for image to download, if not preloaded
+        //clear canvas for new drawing
+        sliding();//Called right before drawing, waits til the image is loaded
+        //draw image
+        //adjust canvas size to fit image
+        //Pause Loading Spinner
+        //Auto Scroll, if enabled
+        slidend();//Called after slide transition finishes
+    },
+    
+```
 * When called with no arguments, callback **gets** the sliding callback
 * When called with one argument, type, it **gets** the corresponding callback of that type
 * When called with a type and a function, it **sets** the callback of the state of given type
