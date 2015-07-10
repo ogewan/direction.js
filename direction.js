@@ -138,6 +138,8 @@
                 spinning=true;
                 window.setTimeout(spin, spinner.rate, object);
                 slidestart();
+                if(idd<0) idd=0;//if lower than zero set to zero
+                if(idd>=count) idd=count-1; //can not be equal to our higher than the amount of pages
                 if(!iimg[idd].loaded) context.clearRect(0, 0, layers[1].width, layers[1].height);
                 imagething.imaginaryID = idd;
                 imagething.src = config.dir+iimg[idd].url[0];
