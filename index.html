@@ -29,7 +29,10 @@
       <section>
        <div id="me"></div>
         <script src="direction.min.js"></script>
-        <script>var a;function b(){a=new direction("oots0001.gif oots0002.gif oots0003.gif oots0004.gif oots0005.gif oots0006.gif oots0007.gif oots0008.gif oots0009.gif oots0010.gif oots0011.gif oots0012.gif oots0013.gif oots0014.gif oots0015.gif oots0016.gif oots0017.gif oots0018.gif oots0019.gif oots0020.gif".split(" "),document.getElementById("me"));console.log(a);/*window.setInterval(function(){console.log(a.callback(),a.count(),a.current(),a.rand())},2E3)*/}
+        <script>var a;function b(){
+    var c=[];
+    for(var d=1;d<51;d++) c.push("img ("+d+").jpg");
+    a=new direction(c,document.getElementById("me"),0,{dir:"images/"});console.log(a);window.setInterval(a.rand,5000)};
 window.addEventListener?window.addEventListener("load",b,!1):window.attachEvent?window.attachEvent("onload",b):window.onload=b;</script>
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
