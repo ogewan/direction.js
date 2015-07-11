@@ -169,7 +169,16 @@
                     pstload[r].src = config.dir+iimg[q].url;
                     r++;
                 }
+            }/*,
+            jq = function(){
+                if(window.jQuery===void 0) return window.setTimeout(jq,300);
+                jQuery.fn.direction = function(a,b,c) {
+                    return this.each( function() {
+                        direction(a,$(this),b,c);
+                    });
+                }
             }
+        if(c.jq) jq();*/
         //METHODS - public
         this.count = function(){return count;}
         this.current = function(){return current;}

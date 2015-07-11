@@ -1,19 +1,26 @@
-    /** @preserve direction.js (c) 2015 Oluwaseun Ogedengbe, MIT seun40.github.io/direction.js/*/
+    /** @preserve direction.js (c) 2015 Oluwaseun Ogedengbe, MIT*/
     /**
      * @suppress {globalThis}
      */
-    var direction = function(input,anchor){
+    direction = function(input,anchor,owrite,c){
         //input - an object, list, or string
         //anchor - the html object to append
         //INITIAL SETUP - Ensures input is the correct format, or dies trying
+        c=c||{};
+        var holdr = {parent:null,offset:0,loading:{lines:c.lines||16,rate:c.rate||1000 / 30,diameter:c.diameter||250,/*xpos:1/2,ypos:1/2,*/back:c.loaderback||"#FFF",color:c.color||"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:c.imgprebuffer||5,imgpostbuffer:c.imgpostbuffer||5,startpage:0,back:c.back||"#FFF"},pages:[]};
         if(void 0===input){
             return -1;
         } else if(typeof input==='string'){
-            input = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,width:250,height:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[{alt:"",hover:"",title:"",url:[input],release:0,note:"",perm:!1,anim8:!1}],chapters:[]};
+            holdr.pages.push({alt:"",hover:"",title:"",url:[input],release:0,note:"",perm:!1,anim8:!1});
+            input = holdr;
         } else if(Array.isArray(input)){
-            var holdr = {parent:null,offset:0,loading:{lines:16,rate:1000 / 30,width:250,height:250,xpos:1/2,ypos:1/2,back:"#FFF",color:"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:5,imgpostbuffer:5,startpage:0,back:"#FFF"},pages:[],chapters:[]};
             for(var q = 0;q<input.length;q++){
-                holdr.pages.push({alt:"",hover:"",title:"",url:input[q],release:0,note:"",perm:!1,anim8:!1});
+                holdr.pages.push({alt:"",hover:"",title:"",url:[],release:0,note:"",perm:!1,anim8:!1});
+                if(Array.isArray(input[q])){
+                    for(var w = 0;w<input[q].length;w++){
+                        holdr.pages[q].url.push(input[q][w]);
+                    }
+                } else holdr.pages[q].url.push(input[q]);
             }
             input = holdr;
         } else if(void 0 === input.pages[0].url) return -1;
@@ -33,7 +40,7 @@
             preload = [],
             master = new Image(),
             skroll = true,
-            objref = {acW:300,acH:300},//the purpose of objref, is to allow dynamic canvas resizing in layer 0
+            //objref = {acW:300,acH:300},//the purpose of objref, is to allow dynamic canvas resizing in layer 0
             layers = [document.createElement("canvas"), document.createElement("canvas")],//By default, we have the display layer and the loading layer
             //console.log(this.layers[1]);
             context = layers[1].getContext('2d'),//display context for drawing
@@ -47,37 +54,35 @@
                 color: spinner.color,
                 start: Date.now(),
                 lines: spinner.lines,
-                cW: spinner.width,
-                cH: spinner.height,
-                acW: layers[1].width,
-                acH: layers[1].height,
+                diameter: spinner.diameter,
+                //cwidth: layers[1].width, 300
+                //cheight: layers[1].height,// 480
                 rate: spinner.rate
             },
-            spin = function(a){//handles spinner(Loader)
-                //var rotation = ((Date.now() - a.start) / 1000) * a.lines / a.lines,
-                var rotation = Math.floor(((Date.now() - a.start) / 1000) * a.lines)/a.lines,
+            spin = function(a) {
+                layers[0].style.paddingLeft=((layers[1].width-300)/2)+"px";
+                var rotation = Math.floor(((Date.now() - a.start) / 1000) * a.lines) / a.lines,
                     c = a.color.substr(1);
                 a.context.save();
-                a.context.clearRect(0, 0, a.acW, a.acH);
-                //console.log(rotation,rrotation, a.start,a.lines);
-                a.context.translate(a.acW /2, a.acH /2);
+                a.context.clearRect(0, 0, 300, layers[1].height);
+                a.context.translate(150, layers[1].height/2);
                 a.context.rotate(Math.PI * 2 * rotation);
-                //console.log(a.color);
-                if(c.length==3) c = c[0]+C[0]+c[1]+c[1]+c[2]+c[2];//duplicate as per spec
-                var red = parseInt(c.substr(0,2),16).toString(),
-                    green = parseInt(c.substr(2,2),16).toString(),
-                    blue = parseInt(c.substr(4,2),16).toString();
+                if (c.length == 3) c = c[0] + C[0] + c[1] + c[1] + c[2] + c[2];
+                var red = parseInt(c.substr(0, 2), 16).toString(),
+                    green = parseInt(c.substr(2, 2), 16).toString(),
+                    blue = parseInt(c.substr(4, 2), 16).toString();
                 for (var i = 0; i < a.lines; i++) {
                     a.context.beginPath();
                     a.context.rotate(Math.PI * 2 / a.lines);
-                    a.context.moveTo(a.cW / 10, 0);
-                    a.context.lineTo(a.cW / 4, 0);    
-                    a.context.lineWidth = a.cW / 30;
-                    a.context.strokeStyle = "rgba("+red+","+green+","+blue+"," + i / a.lines + ")";
+                    a.context.moveTo(a.diameter / 10, 0);
+                    a.context.lineTo(a.diameter / 4, 0);
+                    a.context.lineWidth = a.diameter / 30;
+                    a.context.strokeStyle = "rgba(" + red + "," + green + "," + blue + "," + i / a.lines + ")";
                     a.context.stroke();
                 }
                 a.context.restore();
                 if(spinning) window.setTimeout(spin, a.rate, object);
+                else a.context.clearRect(0, 0, 300, layers[1].height);
             },
             scrollit = function(to,time){
                 //format inputs
@@ -87,7 +92,7 @@
                     if(to.y===null||void 0===to.y) to.y=0;
                     if(to.x===null||void 0===to.x) to.x=0;
                 }
-                if(time===null||void 0===time) time=400;
+                if(time===null||void 0===time||time<=0) time=400;//ignore given zero time
                 //if x or y is less than 0 then go to the bottom
                 if(to.y<0) to.y=window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
                 if(to.x<0) to.x=window.innerWidth|| document.documentElement.clientWidth|| document.body.clientWidth;
@@ -116,8 +121,8 @@
                 else iimg[this.imaginaryID].loaded = true;
                 sliding();
                 //conviently, this callback draws the image as soon as master's src is changed and image loaded
-                layers[1].width = layers[0].width = objref.acW = this.width;
-                layers[1].height = layers[0].height = objref.acH = this.height;
+                layers[1].width /*= layers[0].width = objref.acW */= this.width;
+                layers[1].height = layers[0].height /*= objref.acH*/ = this.height;
                 context.drawImage(this,0,0);
                 current = this.imaginaryID;
                 /*console.log("killing",intervall);
@@ -135,9 +140,11 @@
                 spinning=true;
                 window.setTimeout(spin, spinner.rate, object);
                 slidestart();
+                if(idd<0) idd=0;//if lower than zero set to zero
+                if(idd>=count) idd=count-1; //can not be equal to our higher than the amount of pages
                 if(!iimg[idd].loaded) context.clearRect(0, 0, layers[1].width, layers[1].height);
                 imagething.imaginaryID = idd;
-                imagething.src = config.dir+iimg[idd].url;
+                imagething.src = config.dir+iimg[idd].url[0];
                 /*console.log("----");
             for(var q = idd-1;q>idd-self.config.imgprebuffer-1&&q>=0;q--){
                 console.log(q);
@@ -162,16 +169,25 @@
                     pstload[r].src = config.dir+iimg[q].url;
                     r++;
                 }
+            },
+            jq = function(){
+                if(window.jQuery===void 0) return window.setTimeout(jq,300);
+                jQuery.fn.direction = function(a,b,c) {
+                    return this.each( function() {
+                        direction(a,$(this),b,c);
+                    });
+                }
             }
+        if(c.jq) jq();
         //METHODS - public
         this.count = function(){return count;}
         this.current = function(){return current;}
         this.callback = function(type,callback){
             if(type===null||void 0===type) return sliding;
-            if(callback===null||void 0===callback) return (type)?(type>0)?slidestart:slidend:sliding;
+            if(callback===null||void 0===callback) return (type)?(type>0)?slidend:slidestart:sliding;
             if(type)
-                if(type>0) slidestart = callback;
-                else slidend = callback;
+                if(type>0) slidend = callback;
+                else slidestart = callback;
             else sliding = callback;
             return 1;
         }
@@ -207,6 +223,10 @@
             assign(master,sre);
             return sre;
         }
+        this.data = function(to){//returns info about slide
+            var sre = (to===null||void 0===to)?current:parseInt(to,10);
+            return (isNaN(sre))?iimg[current]:iimg[sre];
+        }
         this.scroll = function(bool){//toggles Auto Scrolling
             if(bool===null||void 0===bool) return skroll;
             return skroll=bool;
@@ -214,12 +234,13 @@
         this.scrollTo = function(to,time){return scrollit(to,time);}//public wrapper for scrollit
         //LOADER - setup
         layers[0].height=480;
-        layers.width=640;
+        //layers[0].width=640;
         layers[0].style.background=spinner.back;
+        layers[0].style.paddingLeft="170px";
         layers[0].style.zIndex=0;
         layers[0].style.position="absolute";
 
-        objref = object;
+        //objref = object;
         //console.log(layers[1]);
         if(anchor) anchor.appendChild(layers[0]);
         else document.body.appendChild(layers[0]);
@@ -248,11 +269,15 @@
         }
         //preload[0].imaginaryID = 0;
         //preload[0].src = input.pages[0].url;
+        //init
+        assign(master,(owrite===void 0||owrite===null||isNaN(owrite))?config.startpage:owrite);
+        //end init
         layers[1].height=480;
         layers[1].width=640;
         layers[1].background = config.back;
         layers[1].style.zIndex=1;
-        layers[1].style.position="absolute";
+        layers[1].style.position="relative";
+        //layers[1].style.visibility="hidden";
         if(anchor) anchor.appendChild(layers[1]);
         else document.body.appendChild(layers[1]);
     }
