@@ -81,6 +81,7 @@
                 }
                 a.context.restore();
                 if(spinning) window.setTimeout(spin, a.rate, object);
+                else a.context.clearRect(0, 0, 300, layers[1].height);
             },
             scrollit = function(to,time){
                 //format inputs
