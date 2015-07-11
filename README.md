@@ -56,7 +56,7 @@ var foo = new direction(input,anchor,overwrite,config);
 	back: hexstring			//the color of the back of the display canvas
 	jq: bool(true/false)	//jQuery plugin, allows the use of direction anchored to
 	//the elements of a jQuery selector. The anchor argument is ommitted. Only works with Plus.
-	$("#mycarousel).direction(input,overwrite,config)
+	$("#mycarousel").direction(input,overwrite,config)
 }
 ```
 Now at this point, you'd probably be wondering why it isn't doing anything. All the other carousels, you've tried did moved around fancily flipping through images and stuff. You might even be prompted to ask, "Seun40, why isn't it doing anything?". And to that I answer, that's what it's supposed to do.
