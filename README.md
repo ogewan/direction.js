@@ -27,7 +27,7 @@ MicroLib Canvas Carousel built for [comix-ngn] as smaller, canvas only alternati
   * direction.js - the uncompressed file, for development and debugging
   * direction.min.js - the minified file, for production **[Recommended]**
   * direction.nan.js - the wild child, I mean *nanofied* file, mainly proof of concept. Uses [Google's Closure Compiler] Advanced Optimizations. It has been tested to work and *should* perform exactly like its big sisters, but I make no promises. It is ~858 bytes smaller than min, so you gain that for its *creativity* ;).
-  * ***New** Direction.js Plus Edition: To keep the main file under 5KB minified, I created a new edition called directionpl.js. It is functionally identical to the standard edition, and comes in the same flavors but adds functionality for video and animated gifs. It is temporary until I can fit it into the standard.
+  * ~~* **New** Direction.js Plus Edition: To keep the main file under 5KB minified, I created a new edition called directionpl.js. It is functionally identical to the standard edition, and comes in the same flavors but adds functionality for video and animated gifs. It is temporary until I can fit it into the standard.~~ **:< Don't use it's not ready yet.**
 
 * You can set the constructor to any dang var you want, by default it is "direction". Simply use new "direction"(input, anchor) to create the carousel.
 
