@@ -70,7 +70,7 @@ window.setInterval(foo.next,1000);//Auto scrolls through Webcomic from first to 
 
 ##API
 
-`go(index)` - go to the slide at index
+`go(index)` - go to the slide at index, goes to first slide by default
 
 `frst()` - go to the first slide
 
@@ -86,7 +86,9 @@ window.setInterval(foo.next,1000);//Auto scrolls through Webcomic from first to 
 
 `count()` - gets the total amount of slides
 
-`scroll()` - gets/sets the status of the auto scroll. To auto scroll to the top of the page on slide change, set to true,. To disable, set it to false. It is true by default
+`data(index)` - gets information about the slide at index, such as name and url, defaults to current page.
+
+`scroll()` - gets/sets the status of the auto scroll. To auto scroll to the top of the page on slide change, set to true. To disable, set it to false. It is true by default
 
 `scrollTo(place,time)` - scroll to place in given time (milliseconds)
 * if no arguments are given, it scrolls to the top left (0,0) in default time
