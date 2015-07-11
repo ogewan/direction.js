@@ -91,7 +91,7 @@
                     if(to.y===null||void 0===to.y) to.y=0;
                     if(to.x===null||void 0===to.x) to.x=0;
                 }
-                if(time===null||void 0===time) time=400;
+                if(time===null||void 0===time||time<=0) time=400;//ignore given zero time
                 //if x or y is less than 0 then go to the bottom
                 if(to.y<0) to.y=window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
                 if(to.x<0) to.x=window.innerWidth|| document.documentElement.clientWidth|| document.body.clientWidth;
