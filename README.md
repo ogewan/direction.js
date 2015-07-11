@@ -36,7 +36,7 @@ var input = ["0.png","1.png","2.png","3.png"];
 var anchor = document.body;
 var overwrite = 1;
 var config = {color:"#373737"}
-var foo = new direction(input,anchor,);
+var foo = new direction(input,anchor,overwrite,config);
 ```
   * input - **REQUIRED** - can either be a single image source, an array of image sources, or a correctly formatted object.*
   * anchor - *OPTIONAL* - an HTMLelement to append the carousel to. By default, it will attach to the body.**
