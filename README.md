@@ -34,11 +34,26 @@ MicroLib Canvas Carousel built for [comix-ngn] as smaller, canvas only alternati
 ``` js
 var input = ["0.png","1.png","2.png","3.png"];
 var anchor = document.body;
-var foo = new direction(input,anchor);
+var overwrite = 1;
+var config = {color:"#373737"}
+var foo = new direction(input,anchor,);
 ```
   * input - **REQUIRED** - can either be a single image source, an array of image sources, or a correctly formatted object.*
   * anchor - *OPTIONAL* - an HTMLelement to append the carousel to. By default, it will attach to the body.**
-
+  * overwrite - *OPTIONAL* - By default, direction will show the first page. To show a different page on load add this argument.
+  * config - *OPTIONAL* - Unless you supply a formatted object, direction will use default settings. To customize these settings without a formatted object, supply this configuration object.
+``` js
+{
+	lines: int				//how many lines the spinner is made of
+	rate: int/float			//the rate at which the animation plays
+	diameter: int			//the diameter of the spinner
+	loaderback: hexstring	//the color of the back of the loading screen
+	color: hextring			//the color of the spinner
+	imgprebuffer: int		//the # of images before the currently displayed on to preload
+	imgpostbuffer: int		//the # of images after the currently displayed on to preload
+	back: hexstring			//the color of the back of the display canvas
+}
+```
 Now at this point, you'd probably be wondering why it isn't doing anything. All the other carousels, you've tried did moved around fancily flipping through images and stuff. You might even be prompted to ask, "Seun40, why isn't it doing anything?". And to that I answer, that's what it's supposed to do.
 
 This carousel is pretty **barebones**. If you want it to do something, you'll probably have to write a lil script to do it for you. But fear not, its easy peasy.
