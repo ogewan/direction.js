@@ -7,7 +7,7 @@
         //anchor - the html object to append
         //INITIAL SETUP - Ensures input is the correct format, or dies trying
         c=c||{};
-        var holdr = {parent:null,offset:0,loading:{lines:c.lines||16,rate:c.rate||1000 / 30,diameter:c.diameter||250,/*xpos:1/2,ypos:1/2,*/back:c.loaderback||"#FFF",color:c.color||"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:c.imgprebuffer||5,imgpostbuffer:c.imgpostbuffer||5,startpage:0,back:c.back||"#FFF"},pages:[]};
+        var holdr = {parent:null,offset:0,loading:{lines:c.lines||16,rate:c.rate||1000 / 30,diameter:c.diameter||250,/*xpos:1/2,ypos:1/2,*/back:c.loaderback||"#FFF",color:c.color||"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:c.dir||"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:c.imgprebuffer||5,imgpostbuffer:c.imgpostbuffer||5,startpage:0,back:c.back||"#FFF"},pages:[]};
         if(void 0===input){
             return -1;
         } else if(typeof input==='string'){
@@ -28,7 +28,7 @@
         //PROPERTIES - private
             //self = this,//we don't need self anymore because, the public methods that require it aren't utlized in private methods //that
         var iimg = input.pages,
-            count= input.pages.length,
+            count= input.pages.length,  
             //intervall,
             spinning=true,//is the spinner spinning?
             current= -1,//-1 for unset, corresponds to current page,

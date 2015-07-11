@@ -44,6 +44,8 @@ var foo = new direction(input,anchor,overwrite,config);
   * config - *OPTIONAL* - Unless you supply a formatted object, direction will use default settings. To customize these settings without a formatted object, supply this configuration object.
 ``` js
 {
+	dir: string				//the directory that contains the images,
+	//it defaults to "assets/" not ""
 	lines: int				//how many lines the spinner is made of
 	rate: int/float			//the rate at which the animation plays
 	diameter: int			//the diameter of the spinner
