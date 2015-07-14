@@ -1,4 +1,4 @@
-    /** @preserve direction.js (c) 2015 Oluwaseun Ogedengbe, MIT*/
+    /** @preserve direction.js (c) 2015 Seun Ogedengbe, MIT*/
     /**
      * @suppress {globalThis}
      */
