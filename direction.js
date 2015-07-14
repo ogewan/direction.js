@@ -280,4 +280,5 @@
         //layers[1].style.visibility="hidden";
         if(anchor) anchor.appendChild(layers[1]);
         else document.body.appendChild(layers[1]);
+        this.canvi=layers;
     }
