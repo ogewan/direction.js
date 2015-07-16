@@ -124,7 +124,7 @@
                 layers[1].width /*= layers[0].width = objref.acW */= this.width;
                 layers[1].height = layers[0].height /*= objref.acH*/ = this.height;
                 context.drawImage(this,0,0);
-                current = this.imaginaryID;
+                //current = this.imaginaryID;//do not wait on load for page change, do not change page on page load
                 /*console.log("killing",intervall);
                 window.clearInterval(intervall);
                 intervall=-1;*/
@@ -145,6 +145,7 @@
                 if(!iimg[idd].loaded) context.clearRect(0, 0, layers[1].width, layers[1].height);
                 imagething.imaginaryID = idd;
                 imagething.src = config.dir+iimg[idd].url[0];
+                current = idd;//we change page as soon as it is assigned, so that page still changes even if it never loads
                 /*console.log("----");
             for(var q = idd-1;q>idd-self.config.imgprebuffer-1&&q>=0;q--){
                 console.log(q);
