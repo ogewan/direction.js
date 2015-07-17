@@ -282,4 +282,5 @@
         if(anchor) anchor.appendChild(layers[1]);
         else document.body.appendChild(layers[1]);
         this.canvi=layers;
+        this.internals = input;
     }
