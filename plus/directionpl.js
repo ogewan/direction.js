@@ -1,4 +1,4 @@
-    /** @preserve direction.js (c) 2015 Oluwaseun Ogedengbe, MIT*/
+    /** @preserve direction.js (c) 2015 Seun Ogedengbe, MIT*/
     /**
      * @suppress {globalThis}
      */
@@ -7,7 +7,7 @@
         //anchor - the html object to append
         //INITIAL SETUP - Ensures input is the correct format, or dies trying
         c=c||{};
-        var holdr = {parent:null,offset:0,loading:{lines:c.lines||16,rate:c.rate||1000 / 30,diameter:c.diameter||250,/*xpos:1/2,ypos:1/2,*/back:c.loaderback||"#FFF",color:c.color||"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:c.imgprebuffer||5,imgpostbuffer:c.imgpostbuffer||5,startpage:0,back:c.back||"#FFF"},pages:[]};
+        var holdr = {parent:null,offset:0,loading:{lines:c.lines||16,rate:c.rate||1000 / 30,diameter:c.diameter||250,/*xpos:1/2,ypos:1/2,*/back:c.loaderback||"#FFF",color:c.color||"#373737"/*back:"#000",color:"#3737FF"*/},config:{dir:c.dir||"assets/",pagestartnum:!1,chapterstartnum:!1,imgprebuffer:c.imgprebuffer||5,imgpostbuffer:c.imgpostbuffer||5,startpage:0,back:c.back||"#FFF"},pages:[]};
         if(void 0===input){
             return -1;
         } else if(typeof input==='string'){
@@ -28,7 +28,7 @@
         //PROPERTIES - private
             //self = this,//we don't need self anymore because, the public methods that require it aren't utlized in private methods //that
         var iimg = input.pages,
-            count= input.pages.length,
+            count= input.pages.length,  
             //intervall,
             spinning=true,//is the spinner spinning?
             current= -1,//-1 for unset, corresponds to current page,
@@ -124,7 +124,7 @@
                 layers[1].width /*= layers[0].width = objref.acW */= this.width;
                 layers[1].height = layers[0].height /*= objref.acH*/ = this.height;
                 context.drawImage(this,0,0);
-                current = this.imaginaryID;
+                //current = this.imaginaryID;//do not wait on load for page change, do not change page on page load
                 /*console.log("killing",intervall);
                 window.clearInterval(intervall);
                 intervall=-1;*/
@@ -145,6 +145,7 @@
                 if(!iimg[idd].loaded) context.clearRect(0, 0, layers[1].width, layers[1].height);
                 imagething.imaginaryID = idd;
                 imagething.src = config.dir+iimg[idd].url[0];
+                current = idd;//we change page as soon as it is assigned, so that page still changes even if it never loads
                 /*console.log("----");
             for(var q = idd-1;q>idd-self.config.imgprebuffer-1&&q>=0;q--){
                 console.log(q);
@@ -171,7 +172,8 @@
                 }
             },
             jq = function(){
-                if(window.jQuery===void 0) return window.setTimeout(jq,300);
+                this.attempts = 0||this.attempts+1;
+                if(window.jQuery===void 0&&this.attempts<10) return window.setTimeout(jq,300);
                 jQuery.fn.direction = function(a,b,c) {
                     return this.each( function() {
                         direction(a,$(this),b,c);
@@ -280,4 +282,6 @@
         //layers[1].style.visibility="hidden";
         if(anchor) anchor.appendChild(layers[1]);
         else document.body.appendChild(layers[1]);
+        this.canvi=layers;
+        this.internals = input;
     }
