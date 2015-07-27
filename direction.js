@@ -172,7 +172,8 @@
                 }
             }/*,
             jq = function(){
-                if(window.jQuery===void 0) return window.setTimeout(jq,300);
+                this.attempts = 0||this.attempts+1;
+                if(window.jQuery===void 0&&this.attempts<10) return window.setTimeout(jq,300);
                 jQuery.fn.direction = function(a,b,c) {
                     return this.each( function() {
                         direction(a,$(this),b,c);
