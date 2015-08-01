@@ -227,7 +227,7 @@
         }
         this.data = function(to){//returns info about slide
             var sre = (to===null||void 0===to)?current:parseInt(to,10);
-            return (isNaN(sre))?iimg[current]:iimg[sre];
+            return (isNaN(sre))?iimg[current]:iimg[(Math.floor(Math.max(0,Math.min(count-1,sre))))];
         }
         this.scroll = function(bool){//toggles Auto Scrolling
             if(bool===null||void 0===bool) return skroll;
