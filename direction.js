@@ -23,7 +23,7 @@
                 } else holdr.pages[q].url.push(input[q]);
             }
             input = holdr;
-        } else if(void 0 === input.pages) input.pages = [];
+        } else if(!input.pages.length) void 0;
         else if(void 0 === input.pages[0].url) return -1;
         if(void 0 === anchor||anchor == null) anchor = 0;
         //PROPERTIES - private
