@@ -210,6 +210,9 @@ direction = function (input, anchor, owrite, config) {
                 r++;
             }
         },
+        xtndLmt = function (org, src) {//add value from src if its key exists in org
+            for(var key in src) if (org.hasOwnProperty(key)) org[key] = src[key];
+        };
         jq = function () {
             try {
                 jQuery.fn.direction = function (a, b, c) {
@@ -224,11 +227,17 @@ direction = function (input, anchor, owrite, config) {
     if (window.jQuery) jq();
 
     //PROPERTIES - public
-    this.iimg = iimg;
     this.canvi = layers;
-    this.internals = input;
     this.cb = cb;
     //METHODS - public
+    this.hotswap = function (arr, opts, start) {
+        iimg = arr || iimg;
+        if (opts) {
+            xtndLmt(spinner, opts);
+            xtndLmt(options, opts);
+        }
+        this.go(start||0);
+    }
     this.count = function () {
         return iimg.length;
     };
