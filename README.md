@@ -26,8 +26,7 @@ MicroLib Canvas Carousel built for [comix-ngn] as smaller, canvas only alternati
   Oh and almost forgot, direction.js comes in three flavors:
   * direction.js - the uncompressed file, for development and debugging
   * direction.min.js - the minified file, for production **[Recommended]**
-  * direction.nan.js - the wild child, I mean *nanofied* file, mainly proof of concept. Uses [Google's Closure Compiler] Advanced Optimizations. It has been tested to work and *should* perform exactly like its big sisters, but I make no promises. It is ~858 bytes smaller than min, so you gain that for its *creativity* ;).
-  * ***New** Direction.js Plus Edition: To keep the main file under 5KB minified, I created a new edition called directionpl.js. It is functionally identical to the standard edition, and comes in the same flavors but adds functionality for video and animated gifs. Registers as jQuery plugin via config. It is temporary until I can fit it into the standard.
+  * direction.nan.js - the wild child, I mean *nanofied* file, mainly proof of concept. Uses [Google's Closure Compiler] Advanced Optimizations. 
 
 * You can set the constructor to any dang var you want, by default it is "direction". Simply use new "direction"(input, anchor) to create the carousel.
 
@@ -38,8 +37,8 @@ var overwrite = 1;
 var config = {color:"#373737"}
 var foo = new direction(input,anchor,overwrite,config);
 ```
-  * input - **REQUIRED** - can either be a single image source, an array of image sources, or a correctly formatted object.*
-  * anchor - *OPTIONAL* - an HTMLelement to append the carousel to. By default, it will attach to the body.**
+  * input - **REQUIRED** - an array of image sources.
+  * anchor - *OPTIONAL* - an HTMLelement to append the carousel to. By default, it will attach to the body.*
   * overwrite - *OPTIONAL* - By default, direction will show the first page. To show a different page on load add this argument.
   * config - *OPTIONAL* - Unless you supply a formatted object, direction will use default settings. To customize these settings without a formatted object, supply this configuration object.
 ``` js
@@ -54,12 +53,9 @@ var foo = new direction(input,anchor,overwrite,config);
 	imgprebuffer: int		//the # of images before the currently displayed on to preload
 	imgpostbuffer: int		//the # of images after the currently displayed on to preload
 	back: hexstring			//the color of the back of the display canvas
-	jq: bool(true/false)	//jQuery plugin, allows the use of direction anchored to
-	//the elements of a jQuery selector. The anchor argument is ommitted. Only works with Plus.
-	$("#mycarousel").direction(input,overwrite,config)
 }
 ```
-Now at this point, you'd probably be wondering why it isn't doing anything. All the other carousels, you've tried did moved around fancily flipping through images and stuff. You might even be prompted to ask, "Seun40, why isn't it doing anything?". And to that I answer, that's what it's supposed to do.
+Now at this point, you'd probably be wondering why it isn't doing anything. All the other carousels, you've tried did moved around fancily flipping through images and stuff. You might even be prompted to ask, "Ogewan, why isn't it doing anything?". And to that I answer, that's what it's supposed to do.
 
 This carousel is pretty **barebones**. If you want it to do something, you'll probably have to write a lil script to do it for you. But fear not, its easy peasy.
 
@@ -144,13 +140,11 @@ is a good guide
 * ~~Scrollto implementation~~
 * ~~Efficient spinner, currently spinner is always animated, since it uses setInterval, using requestAnimationFrame alone would cut my userbase so I need the fallback, but the first issue is getting the fallback to work.~~
   * Addendum: setInterval replaced with setTimeout, so now the spinner pauses when a slide is displayed. Granted, requestAnimationFrame should theoretically do better than setTimeout, setTimeout preserves compatibility and only active when no slides are visible, which is when they are loading, so in this case the costs are much greater than the benefits.
-* _direction.js is more or less finished for now, development focus will return back to comix-ngn. Any changes to direction.js should be only optimization and file size reduction._
 * Add video and animated gif support, because this will violate the size constraints of a MicroLib, this functionality will only be present in an alternate file called directionpl.js
 * Adding video and animated gif support while keeping min file under 5KB.
+* integrate infinite into direction
 
-_*I say direction can take an object as an argument, but_ **_DO NOT USE AN OBJECT_** _. I only included the object parameter for completeness. Unlike the string and array of strings, the object is assumed to be correct, but only works correctly for the formatted JSON objects in [comix-ngn]. Unless your object is formatted exactly the same, it will break the function._
-
-_**Because it attaches to an element in the DOM, please make sure that the DOM is loaded/ready before you call direction(). If you don't it will immediately hit a "[cannot call method 'appendChild' of null]" error._
+_*Because it attaches to an element in the DOM, please make sure that the DOM is loaded/ready before you call direction(). If you don't it will immediately hit a "[cannot call method 'appendChild' of null]" error._
 
 
 [comix-ngn]: http://comixngn.js.org/
