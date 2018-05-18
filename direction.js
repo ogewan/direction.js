@@ -226,7 +226,7 @@
             var sre = (to===null||void 0===to) ? 0 : parseInt(to, 10);
             //console.log(sre);
             sre = (isNaN(sre)) ? 0 : sre;
-            assign(master, (Math.floor(Math.max(0,Math.min(count-1,sre)))));
+            assign(master, (Math.floor(Math.max(0,Math.min(iimg.length - 1,sre)))));
             return sre;
         }
         this.prev = function() {
@@ -236,27 +236,27 @@
         }
         this.next = function() {
             //console.log("Hello");
-            var sre = current+1;
-            if(sre<count) assign(master,sre);
+            var sre = current + 1;
+            if(sre < iimg.length) assign(master,sre);
             return sre;
         }
         this.frst = function() {
-            if(current>=0) assign(master,0);
+            if(current >= 0) assign(master,0);
             return 0;
         }
         this.last = function() {
-            assign(master,count-1);
-            return count-1;
+            assign(master, iimg.length -1);
+            return iimg.length - 1;
         }
         this.rand = function() {
-            var sre = Math.floor(Math.random() * (count-1));
+            var sre = Math.floor(Math.random() * (iimg.length - 1));
             //console.log(sre);
             assign(master,sre);
             return sre;
         }
         this.data = function(to) { //returns info about slide
             var sre = (to===null||void 0===to)?current:parseInt(to,10);
-            return (isNaN(sre)) ? iimg[current] : iimg[(Math.floor(Math.max(0, Math.min(count-1, sre))))];
+            return (isNaN(sre)) ? iimg[current] : iimg[(Math.floor(Math.max(0, Math.min(iimg.length - 1, sre))))];
         }
         this.scroll = function(bool) {//toggles Auto Scrolling
             if(!(bool===null||void 0===bool)) skroll = bool;
