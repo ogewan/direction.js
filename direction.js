@@ -39,7 +39,11 @@
         //METHODS - private
             //n = function(){return 0},//this null fuction save us some bytes
             cb = {
-                run: function(a) { for (var b=0; b < b[a].length; b++) {cb[a][b]();} },
+                run: function(a) { 
+                    for (var b = 0; b < cb[a].length; b++) {
+                        cb[a][b]();
+                    } 
+                },
                 start: [],
                 slidn: [],
                 slidd: []
