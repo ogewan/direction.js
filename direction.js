@@ -20,7 +20,7 @@ direction = function (input, anchor, owrite, config) {
         spinner = {
             lines: config.lines || 16,
             rate: config.rate || 1000 / 30,
-            diameter: config.diameter || 250,
+            dia: config.diameter || 250,
             back: config.loaderback || "#FFF",
             color: config.color || "#373737"
         },
@@ -56,7 +56,7 @@ direction = function (input, anchor, owrite, config) {
             color: spinner.color,
             start: Date.now(),
             lines: spinner.lines,
-            diameter: spinner.diameter,
+            dia: spinner.dia,
             rate: spinner.rate
         },
         spin = function (a) {
@@ -77,9 +77,9 @@ direction = function (input, anchor, owrite, config) {
             for (var i = 0; i < a.lines; i++) {
                 a.context.beginPath();
                 a.context.rotate(Math.PI * 2 / a.lines);
-                a.context.moveTo(a.diameter / 10, 0);
-                a.context.lineTo(a.diameter / 4, 0);
-                a.context.lineWidth = a.diameter / 30;
+                a.context.moveTo(a.dia / 10, 0);
+                a.context.lineTo(a.dia / 4, 0);
+                a.context.lineWidth = a.dia / 30;
                 a.context.strokeStyle =
                     "rgba(" + red + "," + green + "," + blue + "," + i / a.lines + ")";
                 a.context.stroke();
@@ -231,7 +231,7 @@ direction = function (input, anchor, owrite, config) {
     this.cb = cb;
     //METHODS - public
     this.hotswap = function (arr, opts, start) {
-        iimg = arr || iimg;
+        iimg = arr.slice().map(function(val){return {s:val}}) || iimg;
         if (opts) {
             xtndLmt(spinner, opts);
             xtndLmt(options, opts);
