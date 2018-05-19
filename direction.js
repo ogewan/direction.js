@@ -212,7 +212,7 @@ direction = function (input, anchor, owrite, config) {
         },
         xtndLmt = function (org, src) {//add value from src if its key exists in org
             for(var key in src) if (org.hasOwnProperty(key)) org[key] = src[key];
-        };
+        },
         jq = function () {
             try {
                 jQuery.fn.direction = function (a, b, c) {
