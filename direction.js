@@ -1,4 +1,4 @@
-/** @preserve direction.js (c) 2015 Seun Ogedengbe, MIT*/
+/** @preserve direction.js (c) 2015 Ogewan, MIT*/
 /**
  * @suppress {globalThis}
  */
@@ -14,7 +14,7 @@ direction = function (input, anchor, owrite, config) {
     if (void 0 === anchor || anchor == null) anchor = document.body;
 
     //PROPERTIES - private
-    var iimg = input.slice(),
+    var iimg = input.slice().map(function(val){return {s:val}}),
         spinning = true, //is the spinner spinning?
         current = -1, //-1 for unset, corresponds to current page
         spinner = {
@@ -26,8 +26,8 @@ direction = function (input, anchor, owrite, config) {
         },
         options = {
             dir: config.dir || "assets/",
-            imgprebuffer: config.imgprebuffer || 5,
-            imgpostbuffer: config.imgpostbuffer || 5,
+            irb: config.imgprebuffer || 5,
+            itb: config.imgpostbuffer || 5,
             back: config.back || "#FFF"
         },
         pstload = [],
@@ -178,35 +178,35 @@ direction = function (input, anchor, owrite, config) {
             if (!iimg[idd].loaded)
                 context.clearRect(0, 0, layers[1].width, layers[1].height);
             imagething.imaginaryID = idd;
-            imagething.src = options.dir + iimg[idd];
+            imagething.src = options.dir + iimg[idd].s;
             current = idd; //we change page as soon as it is assigned, so that page still changes even if it never loads
             /*console.log("----");
-                  for(var q = idd-1;q>idd-self.config.imgprebuffer-1&&q>=0;q--){
+                  for(var q = idd-1;q>idd-self.config.irb-1&&q>=0;q--){
                       console.log(q);
                   }
                   console.log("//");
-                  for(var q = idd+1;q<self.config.imgpostbuffer+idd+1&&q<self.count;q++){
+                  for(var q = idd+1;q<self.config.itb+idd+1&&q<self.count;q++){
                       console.log(q);
                       continue;
       
                   console.log("----");*/
             var r = 0,
                 q = 0;
-            for (q = idd - 1; q > idd - options.imgprebuffer - 1 && q >= 0; q--) {
+            for (q = idd - 1; q > idd - options.irb - 1 && q >= 0; q--) {
                 if (iimg[q].loaded) continue;
                 preload[r].imaginaryID = q;
-                preload[r].src = options.dir + iimg[q];
+                preload[r].src = options.dir + iimg[q].s;
                 r++;
             }
             r = 0;
             for (
                 q = idd + 1;
-                q < options.imgpostbuffer + idd + 1 && q < iimg.length;
+                q < options.itb + idd + 1 && q < iimg.length;
                 q++
             ) {
                 if (iimg[q].loaded) continue;
                 pstload[r].imaginaryID = q;
-                pstload[r].src = options.dir + iimg[q];
+                pstload[r].src = options.dir + iimg[q].s;
                 r++;
             }
         },
@@ -349,12 +349,12 @@ direction = function (input, anchor, owrite, config) {
         iimg[q].desig = q ? (q == iimg.length - 1 ? 1 : 0) : -1; //-1 means first, 0 means middle, 1 means last: true if endpoint, false if middle
         iimg[q].loaded = false;
     }
-    for (q = 0; q < options.imgprebuffer; q++) {
+    for (q = 0; q < options.irb; q++) {
         preload.push(new Image());
         preload[q].imaginaryID = -1; //unset to an imaginary image
         preload[q].addEventListener("load", preloadGeneric, false);
     }
-    for (q = 0; q < options.imgpostbuffer; q++) {
+    for (q = 0; q < options.itb; q++) {
         pstload.push(new Image());
         pstload[q].imaginaryID = -1; //unset to an imaginary image
         pstload[q].addEventListener("load", preloadGeneric, false);
