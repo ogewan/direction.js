@@ -176,6 +176,7 @@ direction = function (input, anchor, owrite, config) {
             cb.run("start"); //slidestart();
             if (idd < 0) idd = 0; //if lower than zero set to zero
             if (idd >= iimg.length) idd = iimg.length - 1; //can not be equal to our higher than the amount of pages
+            if (idd < 0) return;
             if (!iimg[idd].loaded)
                 ctx.clearRect(0, 0, layers[1].width, layers[1].height);
             imagething.imaginaryID = idd;
