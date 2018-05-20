@@ -16,6 +16,7 @@ direction = function (input, anchor, owrite, config) {
     //PROPERTIES - private
     var iimg = input.slice().map(function(val){return {s:val}}),
         spinning = true, //is the spinner spinning?
+        scrolling = -1, //scroll ID
         current = -1, //-1 for unset, corresponds to current page
         spinner = {
             lines: config.lines || 16,
@@ -38,7 +39,7 @@ direction = function (input, anchor, owrite, config) {
             document.createElement("canvas"),
             document.createElement("canvas")
         ],
-        context = layers[1].getContext("2d"),
+        ctx = layers[1].getContext("2d"),
         //METHODS - private
         //n = function(){return 0},//this null fuction save us some bytes
         cb = {
@@ -52,7 +53,7 @@ direction = function (input, anchor, owrite, config) {
             slidd: []
         },
         object = {
-            context: layers[0].getContext("2d"),
+            ctx: layers[0].getContext("2d"),
             color: spinner.color,
             start: Date.now(),
             lines: spinner.lines,
@@ -64,10 +65,10 @@ direction = function (input, anchor, owrite, config) {
             var rotation =
                 Math.floor((Date.now() - a.start) / 1000 * a.lines) / a.lines,
                 c = a.color.substr(1);
-            a.context.save();
-            a.context.clearRect(0, 0, 300, layers[1].height);
-            a.context.translate(150, layers[1].height / 2);
-            a.context.rotate(Math.PI * 2 * rotation);
+            a.ctx.save();
+            a.ctx.clearRect(0, 0, 300, layers[1].height);
+            a.ctx.translate(150, layers[1].height / 2);
+            a.ctx.rotate(Math.PI * 2 * rotation);
 
             if (c.length == 3) c = c[0] + C[0] + c[1] + c[1] + c[2] + c[2];
             var red = parseInt(c.substr(0, 2), 16).toString(),
@@ -75,18 +76,18 @@ direction = function (input, anchor, owrite, config) {
                 blue = parseInt(c.substr(4, 2), 16).toString();
 
             for (var i = 0; i < a.lines; i++) {
-                a.context.beginPath();
-                a.context.rotate(Math.PI * 2 / a.lines);
-                a.context.moveTo(a.dia / 10, 0);
-                a.context.lineTo(a.dia / 4, 0);
-                a.context.lineWidth = a.dia / 30;
-                a.context.strokeStyle =
+                a.ctx.beginPath();
+                a.ctx.rotate(Math.PI * 2 / a.lines);
+                a.ctx.moveTo(a.dia / 10, 0);
+                a.ctx.lineTo(a.dia / 4, 0);
+                a.ctx.lineWidth = a.dia / 30;
+                a.ctx.strokeStyle =
                     "rgba(" + red + "," + green + "," + blue + "," + i / a.lines + ")";
-                a.context.stroke();
+                a.ctx.stroke();
             }
-            a.context.restore();
+            a.ctx.restore();
             if (spinning) window.setTimeout(spin, a.rate, object);
-            else a.context.clearRect(0, 0, 300, layers[1].height);
+            else a.ctx.clearRect(0, 0, 300, layers[1].height);
         },
         scrollit = function (to, time) {
             //format inputs
@@ -132,9 +133,9 @@ direction = function (input, anchor, owrite, config) {
             if (dis == { x: 0, y: 0 }) return dis; //if that distance is 0 on both x and y, no scrolling required
             var clock = function (c, b, a) {
                 window.scrollBy(Math.floor(c.x) / b, Math.floor(c.y) / b);
-                if (a + 1 < b * 5) window.setTimeout(clock, 5, c, b, a + 1);
+                if (a + 1 < b * 5) scrolling = window.setTimeout(clock, 5, c, b, a + 1);
             };
-            window.setTimeout(clock, 5, dis, Math.floor(time / 5), 0);
+            scrolling = window.setTimeout(clock, 5, dis, Math.floor(time / 5), 0);
             //window.clearInterval(clock);
             return dis;
         },
@@ -147,13 +148,13 @@ direction = function (input, anchor, owrite, config) {
         preloadMaster = function () {
             //actually a misnomer, master doesnt actually preload, it loads and draws
             if (iimg[this.imaginaryID].loaded)
-                context.clearRect(0, 0, this.width, this.height);
+                ctx.clearRect(0, 0, this.width, this.height);
             else iimg[this.imaginaryID].loaded = true;
             cb.run("slidn");
             //conviently, this callback draws the image as soon as master's src is changed and image loaded
             layers[1].width /*= layers[0].width = objref.acW */ = this.width;
             layers[1].height = layers[0].height /*= objref.acH*/ = this.height;
-            context.drawImage(this, 0, 0);
+            ctx.drawImage(this, 0, 0);
             //current = this.imaginaryID;//do not wait on load for page change, do not change page on page load
             /*
                       console.log("killing", intervall);
@@ -176,7 +177,7 @@ direction = function (input, anchor, owrite, config) {
             if (idd < 0) idd = 0; //if lower than zero set to zero
             if (idd >= iimg.length) idd = iimg.length - 1; //can not be equal to our higher than the amount of pages
             if (!iimg[idd].loaded)
-                context.clearRect(0, 0, layers[1].width, layers[1].height);
+                ctx.clearRect(0, 0, layers[1].width, layers[1].height);
             imagething.imaginaryID = idd;
             imagething.src = options.dir + iimg[idd].s;
             current = idd; //we change page as soon as it is assigned, so that page still changes even if it never loads
@@ -230,8 +231,12 @@ direction = function (input, anchor, owrite, config) {
     this.canvi = layers;
     this.cb = cb;
     //METHODS - public
-    this.hotswap = function (arr, opts, start) {
-        iimg = arr.slice().map(function(val){return {s:val}}) || iimg;
+    this.cnl = function() {
+        //stop scrolling
+        window.clearTimeout(scrolling);
+    }
+    this.swap = function (arr, opts, start) {
+        iimg = Array.isArray(arr) ? arr.slice().map(function(val){return {s:val}}) : iimg;
         if (opts) {
             xtndLmt(spinner, opts);
             xtndLmt(options, opts);
