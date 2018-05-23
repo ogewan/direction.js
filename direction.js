@@ -26,7 +26,7 @@ direction = function (input, anchor, owrite, config) {
             color: config.color || "#373737"
         },
         options = {
-            dir: config.dir || "assets/",
+            dir: config.dir || "",
             irb: config.imgprebuffer || 5,
             itb: config.imgpostbuffer || 5,
             back: config.back || "#FFF"
