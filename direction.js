@@ -223,7 +223,7 @@ direction = function (input, anchor, owrite, config) {
                     });
                 };
             } catch (e) {
-                console.log("failed to attach to jQuery");
+                console.log(e);
             }
         };
     if (window.jQuery) jq();
@@ -237,7 +237,7 @@ direction = function (input, anchor, owrite, config) {
         window.clearTimeout(scrolling);
     }
     this.swap = function (arr, opts, start) {
-        iimg = Array.isArray(arr) ? arr.slice().map(function(val, id){return {s:val, d: id ? (id == arr - 1 ? 1 : 0) : -1};}) : iimg;
+        iimg = Array.isArray(arr) ? arr.slice().map(function(val, id){return {s:val, d: id ? (id == arr.length - 1 ? 1 : 0) : -1};}) : iimg;
         if (opts) {
             xtndLmt(spinner, opts);
             xtndLmt(options, opts);
