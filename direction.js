@@ -29,7 +29,8 @@ direction = function (input, anchor, owrite, config) {
             dir: config.dir || "",
             irb: config.imgprebuffer || 5,
             itb: config.imgpostbuffer || 5,
-            back: config.back || "#FFF"
+            back: config.back || "#FFF",
+            sz: config.size || {w: void 0, h: void 0}
         },
         pstload = [],
         preload = [],
@@ -145,16 +146,16 @@ direction = function (input, anchor, owrite, config) {
                       this.imaginaryID=-1;
                       this.src="";*/
         },
-        preloadMaster = function () {
+        draw = function () {
             //actually a misnomer, master doesnt actually preload, it loads and draws
             if (iimg[this.imaginaryID].loaded)
                 ctx.clearRect(0, 0, this.width, this.height);
             else iimg[this.imaginaryID].loaded = true;
             cb.run("slidn");
             //conviently, this callback draws the image as soon as master's src is changed and image loaded
-            layers[1].width /*= layers[0].width = objref.acW */ = this.width;
-            layers[1].height = layers[0].height /*= objref.acH*/ = this.height;
-            ctx.drawImage(this, 0, 0);
+            if (!options.sz.w) layers[1].width /*= layers[0].width = objref.acW */ = this.width;
+            if (!options.sz.h) layers[1].height = layers[0].height /*= objref.acH*/ = this.height;
+            ctx.drawImage(this, 0, 0, options.sz.w, options.sz.h);
             //current = this.imaginaryID;//do not wait on load for page change, do not change page on page load
             /*
                       console.log("killing", intervall);
@@ -290,7 +291,7 @@ direction = function (input, anchor, owrite, config) {
         return sre;
     };
     this.prev = function () {
-        var sre = current - 1; //avoids possible race condition, assign loads in new image which can call preloadMaster which can change self.current before it gets to the return call. storing it premptively will preserve the value
+        var sre = current - 1; //avoids possible race condition, assign loads in new image which can call draw which can change self.current before it gets to the return call. storing it premptively will preserve the value
         if (sre >= 0) assign(master, sre);
         return sre;
     };
@@ -347,7 +348,7 @@ direction = function (input, anchor, owrite, config) {
     //DISPLAY - setup
     master = new Image();
     master.imaginaryID = -1; //unset to an imaginary image
-    master.addEventListener("load", preloadMaster, false);
+    master.addEventListener("load", draw, false);
     //console.log(this.master);
     var q;
     for (q = 0; q < iimg.length; q++) {
