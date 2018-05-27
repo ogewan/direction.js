@@ -148,8 +148,9 @@ direction = function (input, anchor, owrite, config) {
             /*possible implementation - Delete it when we are done, possibly saves memory, since its been cached?
                       this.virID=-1;
                       this.src="";*/
-        }, 
+        },
         draw = function () {
+            var dif, siz;
             //it loads and draws
             if (iimg[master.virID].ld)
                 ctx.clearRect(0, 0, layers[1].width, layers[1].height); //clear the canvas based on its size
@@ -157,9 +158,8 @@ direction = function (input, anchor, owrite, config) {
             
             cb.run("slidn");
             //conviently, this callback draws the image as soon as master's src is changed and image loaded
-            if (options.sz) ctx.drawImage(master, 0, 0, options.sz.w, options.sz.h);
+            if (options.sz) siz = [options.sz.w, options.sz.h];
             else {
-                var dif, siz;
                 switch (options.scl) { //scales to canvas
                     case 1://scale width
                         dif = layers[1].width / master.width;
@@ -173,11 +173,12 @@ direction = function (input, anchor, owrite, config) {
                         if (options.scl) siz = [layers[1].width, layers[1].height];
                         else siz = [master.width, master.height];
                 }
-                layers[1].width /*= layers[0].width = objref.acW */ = siz[0];
-                layers[1].height = layers[0].height /*= objref.acH*/ = siz[1];
-                //ctx.drawImage(master, 0, 0);
-                ctx.drawImage.apply(ctx, [master, 0, 0].concat(siz));
             }
+            layers[1].width /*= layers[0].width = objref.acW */ = siz[0];
+            layers[1].height = layers[0].height /*= objref.acH*/ = siz[1];
+            //ctx.drawImage(master, 0, 0);
+            ctx.drawImage.apply(ctx, [master, 0, 0].concat(siz));
+            
             spinning = 0;
             if (skroll) scrollit();
             cb.run("slidd");
