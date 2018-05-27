@@ -32,7 +32,7 @@ direction = function (input, anchor, owrite, config) {
             irb: config.imgprebuffer || 5,
             itb: config.imgpostbuffer || 5,
             back: config.back || "#FFF",
-            sz: config.size || {w: void 0, h: void 0},
+            sz: config.size || 0,
             scl: 0
         },
         pstload = [],
@@ -152,7 +152,7 @@ direction = function (input, anchor, owrite, config) {
         draw = function () {
             //it loads and draws
             if (iimg[master.virID].ld)
-                ctx.clearRect(0, 0, master.width, master.height);
+                ctx.clearRect(0, 0, layers[1].width, layers[1].height); //clear the canvas based on its size
             else iimg[master.virID].ld = true;
             
             cb.run("slidn");
@@ -162,11 +162,11 @@ direction = function (input, anchor, owrite, config) {
                 var dif, siz;
                 switch (options.scl) { //scales to canvas
                     case 1://scale width
-                        dif = master.width / layers[1].width;
+                        dif = layers[1].width / master.width;
                         siz = [layers[1].width, master.height * dif];
                         break;
                     case 2://scale height
-                        dif = master.height / layers[1].height;
+                        dif = layers[1].height / master.height;
                         siz = [master.width * dif, layers[1].height];
                         break;
                     default:
