@@ -141,27 +141,25 @@ direction = function (input, anchor, owrite, config) {
             return dis;
         },
         preloadGeneric = function () {
-            iimg[this.imaginaryID].loaded = true;
+            iimg[this.virID].loaded = true;
             /*possible implementation - Delete it when we are done, possibly saves memory, since its been cached?
-                      this.imaginaryID=-1;
+                      this.virID=-1;
                       this.src="";*/
-        },
+        }, 
         draw = function () {
-            //actually a misnomer, master doesnt actually preload, it loads and draws
-            if (iimg[this.imaginaryID].loaded)
-                ctx.clearRect(0, 0, this.width, this.height);
-            else iimg[this.imaginaryID].loaded = true;
+            //it loads and draws
+            if (iimg[master.virID].loaded)
+                ctx.clearRect(0, 0, master.width, master.height);
+            else iimg[master.virID].loaded = true;
+            
             cb.run("slidn");
             //conviently, this callback draws the image as soon as master's src is changed and image loaded
-            if (!options.sz.w) layers[1].width /*= layers[0].width = objref.acW */ = this.width;
-            if (!options.sz.h) layers[1].height = layers[0].height /*= objref.acH*/ = this.height;
-            ctx.drawImage(this, 0, 0, options.sz.w, options.sz.h);
-            //current = this.imaginaryID;//do not wait on load for page change, do not change page on page load
-            /*
-                      console.log("killing", intervall);
-                      window.clearInterval(intervall);
-                      intervall = -1;
-                      */
+            if (options.sz) ctx.drawImage(master, 0, 0, options.sz.w, options.sz.h);
+            else {
+                layers[1].width /*= layers[0].width = objref.acW */ = master.width;
+                layers[1].height = layers[0].height /*= objref.acH*/ = master.height;
+                ctx.drawImage(master, 0, 0);
+            }
             spinning = 0;
             if (skroll) scrollit();
             cb.run("slidd");
@@ -180,7 +178,7 @@ direction = function (input, anchor, owrite, config) {
             if (idd < 0) return;
             if (!iimg[idd].loaded)
                 ctx.clearRect(0, 0, layers[1].width, layers[1].height);
-            imagething.imaginaryID = idd;
+            imagething.virID = idd;
             imagething.src = options.dir + iimg[idd].s;
             current = idd; //we change page as soon as it is assigned, so that page still changes even if it never loads
             /*console.log("----");
@@ -197,7 +195,7 @@ direction = function (input, anchor, owrite, config) {
                 q = 0;
             for (q = idd - 1; q > idd - options.irb - 1 && q >= 0; q--) {
                 if (iimg[q].loaded) continue;
-                preload[r].imaginaryID = q;
+                preload[r].virID = q;
                 preload[r].src = options.dir + iimg[q].s;
                 r++;
             }
@@ -208,7 +206,7 @@ direction = function (input, anchor, owrite, config) {
                 q++
             ) {
                 if (iimg[q].loaded) continue;
-                pstload[r].imaginaryID = q;
+                pstload[r].virID = q;
                 pstload[r].src = options.dir + iimg[q].s;
                 r++;
             }
@@ -347,7 +345,7 @@ direction = function (input, anchor, owrite, config) {
     window.setTimeout(spin, spinner.rate, object);
     //DISPLAY - setup
     master = new Image();
-    master.imaginaryID = -1; //unset to an imaginary image
+    master.virID = -1; //unset to an vir image
     master.addEventListener("load", draw, false);
     //console.log(this.master);
     var q;
@@ -358,15 +356,15 @@ direction = function (input, anchor, owrite, config) {
     }
     for (q = 0; q < options.irb; q++) {
         preload.push(new Image());
-        preload[q].imaginaryID = -1; //unset to an imaginary image
+        preload[q].virID = -1; //unset to an vir image
         preload[q].addEventListener("load", preloadGeneric, false);
     }
     for (q = 0; q < options.itb; q++) {
         pstload.push(new Image());
-        pstload[q].imaginaryID = -1; //unset to an imaginary image
+        pstload[q].virID = -1; //unset to an vir image
         pstload[q].addEventListener("load", preloadGeneric, false);
     }
-    //preload[0].imaginaryID = 0;
+    //preload[0].virID = 0;
     //preload[0].src = input.pages[0].url;
     //init
     assign(master, options.startpage || owrite);
