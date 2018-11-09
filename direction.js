@@ -2,21 +2,32 @@
 /**
  * @suppress {globalThis}
  */
-direction = function (input, anchor, owrite, config) {
+direction = function (input, config) {
     //input - an object, list, or string
     //anchor - the html object to append
     //owrite - index of image to start carousel on
     //config - configuration options
 
     if (void 0 === input) return -1;
-    owrite = owrite || 0;
     config = config || {};
+    owrite = config.owrite || 0;
+    anchor = config.anchor || null;
     //redefine globals
-    var dc = document, db = dc.body, de = dc.documentElement, pi = parseInt;
-    if (void 0 === anchor || anchor == null) anchor = db;
+    var dc = document,
+        db = dc.body,
+        de = dc.documentElement,
+        pi = parseInt,
+        raf = function() {
+            var args = Array.prototype.slice.call(arguments),
+                ftn = args.shift();
+            return window.requestAnimationFrame(function(timeStamp) {
+                ftn.apply(null, args);
+            });
+        };
+    if (anchor == null) anchor = db;
 
     //PROPERTIES - private
-    var iimg = input.slice().map(function(val){return {s:val}}),
+    var iimg = input.slice().map(function(val){return {s:val};}),
         spinning = true, //is the spinner spinning?
         scrolling = -1, //scroll ID
         current = -1, //-1 for unset, corresponds to current page
@@ -56,7 +67,7 @@ direction = function (input, anchor, owrite, config) {
             slidn: [],
             slidd: []
         },
-        object = {
+        canvasData = {
             ctx: layers[0].getContext("2d"),
             color: spinner.color,
             start: Date.now(),
@@ -90,7 +101,8 @@ direction = function (input, anchor, owrite, config) {
                 a.ctx.stroke();
             }
             a.ctx.restore();
-            if (spinning) window.setTimeout(spin, a.rate, object);
+            //if (spinning) window.setTimeout(spin, a.rate, canvasData);
+            if (spinning) raf(spin, canvasData);
             else a.ctx.clearRect(0, 0, 300, layers[1].height);
         },
         scrollit = function (to, time) {
@@ -119,13 +131,9 @@ direction = function (input, anchor, owrite, config) {
             //calculate distance needed to travel
             var dis = {
                 x:
-                    window.pageXOffset !== void 0
-                        ? to.x - window.pageXOffset
-                        : to.x - de.scrollLeft,
+                    window.pageXOffset !== void 0 ? to.x - window.pageXOffset : to.x - de.scrollLeft,
                 y:
-                    window.pageYOffset !== void 0
-                        ? to.y - window.pageYOffset
-                        : to.y - de.scrollTop
+                    window.pageYOffset !== void 0 ? to.y - window.pageYOffset : to.y - de.scrollTop
             };
 
             /*
@@ -138,8 +146,10 @@ direction = function (input, anchor, owrite, config) {
             var clock = function (c, b, a) {
                 window.scrollBy(Math.floor(c.x) / b, Math.floor(c.y) / b);
                 if (a + 1 < b * 5) scrolling = window.setTimeout(clock, 5, c, b, a + 1);
+                //if (a + 1 < b * 5) scrolling = raf(clock, 5, c, b, a + 1);
             };
             scrolling = window.setTimeout(clock, 5, dis, Math.floor(time / 5), 0);
+            //scrolling = raf(clock, 5, dis, Math.floor(time / 5), 0);
             //window.clearInterval(clock);
             return dis;
         },
@@ -187,10 +197,11 @@ direction = function (input, anchor, owrite, config) {
             //assign helper, assigns an src and iid according to given id
             //console.log("World");
             /*console.log("dead",intervall);
-                      if(intervall<0) intervall = window.setInterval(spin, spinner.rate, object);
+                      if(intervall<0) intervall = window.setInterval(spin, spinner.rate, canvasData);
                       console.log("started",intervall);*/
             spinning = true;
-            window.setTimeout(spin, spinner.rate, object);
+            //window.setTimeout(spin, spinner.rate, canvasData);
+            raf(spin, canvasData);
             cb.run("start"); //slidestart();
             if (idd < 0) idd = 0; //if lower than zero set to zero
             if (idd >= iimg.length) idd = iimg.length - 1; //can not be equal to our higher than the amount of pages
@@ -355,14 +366,15 @@ direction = function (input, anchor, owrite, config) {
     layers[0].style.zIndex = 0;
     layers[0].style.position = "absolute";
 
-    //objref = object;
+    //objref = canvasData;
     //console.log(layers[1]);
     //if (anchor) anchor.appendChild(layers[0]);
     //else dc.body.appendChild(layers[0]);
-    anchor.appendChild(layers[1]);
-    //console.log(object);
-    //intervall=window.setInterval(spin, spinner.rate, object);
-    window.setTimeout(spin, spinner.rate, object);
+    anchor.appendChild(layers[0]);
+    //console.log(canvasData);
+    //intervall=window.setInterval(spin, spinner.rate, canvasData);
+    //window.setTimeout(spin, spinner.rate, canvasData);
+    raf(spin, canvasData);
     //DISPLAY - setup
     master = new Image();
     master.virID = -1; //unset to an vir image
