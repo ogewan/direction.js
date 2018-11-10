@@ -2,47 +2,68 @@
 /**
  * @suppress {globalThis}
  */
+/**
+ * @function direction
+ * @param {string|string[]} [input] - An space delimited list of image sources, or an array of image sources
+ * @param {Object}          [config] - Configuration options
+ * @param {number}          [config.overwrite] - Integer ID of starting page. [1].
+ * @param {HTMLElement}     [config.anchor] - HTMLElement to append the carousel to. [Document.body]
+ * @param {string}          [config.dir] - The directory containing the images.
+ * @param {number}          [config.imgprebuffer] - The # of images to preload that precede the displayed image. [5]
+ * @param {number}          [config.imgpostbuffer] - The # of images to preload that follow the displayed image. [5]
+ * @param {string}          [config.back] - Hexstring for the display canvas's color. ["#373737"]
+ * [Spinner]
+ * @param {boolean}         [config.hideSpin] - Remove the spinner from the page temporarily. 
+ * @param {boolean}         [config.disableSpin] - Deactivate the spinner forever.
+ * @param {number}          [config.lines] - The # of lines for the spinner.
+ * @param {number}          [config.rate] - Speed of spinner relative to refresh rate.
+ * @param {number}          [config.diameter] - The diameter of the spinner.
+ * @param {string}          [config.loaderback] - Hexstring for the spinner background's color.
+ * @param {string}          [config.color] - Hexstring for the spinner's color.
+ * 
+ */
 direction = function (input, config) {
-    //input - an object, list, or string
-    //anchor - the html object to append
-    //owrite - index of image to start carousel on
-    //config - configuration options
-
-    if (void 0 === input) return -1;
-    config = config || {};
-    owrite = config.owrite || 0;
-    anchor = config.anchor || null;
     //redefine globals
-    var dc = document,
-        db = dc.body,
-        de = dc.documentElement,
+    var du = document,
+        db = du.body,
+        de = du.documentElement,
         pi = parseInt,
-        raf = function() {
-            var args = Array.prototype.slice.call(arguments),
-                ftn = args.shift();
-            return window.requestAnimationFrame(function(timeStamp) {
-                ftn.apply(null, args);
-            });
-        };
-    if (anchor == null) anchor = db;
+        raf = window.requestAnimationFrame;
+
+    input = input || [];
+    config = config || {};
+    owrite = config.overwrite || 0;
+    anchor = config.anchor || db;
 
     //PROPERTIES - private
-    var iimg = input.slice().map(function(val){return {s:val};}),
-        spinning = true, //is the spinner spinning?
-        scrolling = -1, //scroll ID
-        current = -1, //-1 for unset, corresponds to current page
-        spinner = {
-            lines: config.lines || 16,
-            rate: config.rate || 1000 / 30,
+    var iimg = input.slice().map(
+        function(val) {
+            return {s: val};
+        }),
+        //is the spinner spinning?
+        spinning = true,
+        //scroll ID
+        scrolling = -1,
+        //-1 for unset, corresponds to current page
+        current = -1,
+        layers = [
+            config.disableSpin ? null : du.createElement("canvas"),
+            du.createElement("canvas")
+        ],
+        spinner = layers[0] ? {
+            ctx: layers[0].getContext("2d"),
+            clr: config.color || "#373737",
+            str: Date.now(),
+            lne: config.lines || 16,
+            rte: config.rate || 1000 / 30,
             dia: config.diameter || 250,
-            back: config.loaderback || "#FFF",
-            color: config.color || "#373737"
-        },
+            bck: config.loaderback || "#FFF",
+        } : null,
         options = {
             dir: config.dir || "",
             irb: config.imgprebuffer || 5,
             itb: config.imgpostbuffer || 5,
-            back: config.back || "#FFF",
+            bck: config.back || "#FFF",
             sz: config.size || 0,
             scl: 0
         },
@@ -50,10 +71,6 @@ direction = function (input, config) {
         preload = [],
         master = new Image(),
         skroll = true,
-        layers = [
-            dc.createElement("canvas"),
-            dc.createElement("canvas")
-        ],
         ctx = layers[1].getContext("2d"),
         //METHODS - private
         //n = function(){return 0},//this null fuction save us some bytes
@@ -67,43 +84,36 @@ direction = function (input, config) {
             slidn: [],
             slidd: []
         },
-        canvasData = {
-            ctx: layers[0].getContext("2d"),
-            color: spinner.color,
-            start: Date.now(),
-            lines: spinner.lines,
-            dia: spinner.dia,
-            rate: spinner.rate
-        },
-        spin = function (a) {
+        spin = function () {
+            if (!spinner) return;
             layers[0].style.paddingLeft = (layers[1].width - 300) / 2 + "px";
             var rotation =
-                Math.floor((Date.now() - a.start) / 1000 * a.lines) / a.lines,
-                c = a.color.substr(1);
-            a.ctx.save();
-            a.ctx.clearRect(0, 0, 300, layers[1].height);
-            a.ctx.translate(150, layers[1].height / 2);
-            a.ctx.rotate(Math.PI * 2 * rotation);
+                Math.floor((Date.now() - spinner.str) / 1000 * spinner.lne) / spinner.lne,
+                c = spinner.clr.substr(1);
+            spinner.ctx.save();
+            spinner.ctx.clearRect(0, 0, 300, layers[1].height);
+            spinner.ctx.translate(150, layers[1].height / 2);
+            spinner.ctx.rotate(Math.PI * 2 * rotation);
 
             if (c.length == 3) c = c[0] + C[0] + c[1] + c[1] + c[2] + c[2];
             var red = pi(c.substr(0, 2), 16).toString(),
                 green = pi(c.substr(2, 2), 16).toString(),
                 blue = pi(c.substr(4, 2), 16).toString();
 
-            for (var i = 0; i < a.lines; i++) {
-                a.ctx.beginPath();
-                a.ctx.rotate(Math.PI * 2 / a.lines);
-                a.ctx.moveTo(a.dia / 10, 0);
-                a.ctx.lineTo(a.dia / 4, 0);
-                a.ctx.lineWidth = a.dia / 30;
-                a.ctx.strokeStyle =
-                    "rgba(" + red + "," + green + "," + blue + "," + i / a.lines + ")";
-                a.ctx.stroke();
+            for (var i = 0; i < spinner.lne; i++) {
+                spinner.ctx.beginPath();
+                spinner.ctx.rotate(Math.PI * 2 / spinner.lne);
+                spinner.ctx.moveTo(spinner.dia / 10, 0);
+                spinner.ctx.lineTo(spinner.dia / 4, 0);
+                spinner.ctx.lineWidth = spinner.dia / 30;
+                spinner.ctx.strokeStyle =
+                    "rgba(" + red + "," + green + "," + blue + "," + i / spinner.lne + ")";
+                spinner.ctx.stroke();
             }
-            a.ctx.restore();
-            //if (spinning) window.setTimeout(spin, a.rate, canvasData);
-            if (spinning) raf(spin, canvasData);
-            else a.ctx.clearRect(0, 0, 300, layers[1].height);
+            spinner.ctx.restore();
+
+            if (spinning) raf(spin);
+            else spinner.ctx.clearRect(0, 0, 300, layers[1].height);
         },
         scrollit = function (to, time) {
             //format inputs
@@ -136,20 +146,15 @@ direction = function (input, config) {
                     window.pageYOffset !== void 0 ? to.y - window.pageYOffset : to.y - de.scrollTop
             };
 
-            /*
-                      dis.x = (window.pageXOffset === void 0) ? to.x - window.pageXOffset : to.x - de.scrollLeft;
-                      dis.y = (window.pageYOffset === void 0) ? to.y - window.pageYOffset : to.y - de.scrollTop;
-                      */
             //console.log("to", to, "dis" ,dis, "(x", window.pageXOffset, de.scrollLeft, "| y", window.pageYOffset, de.scrollTop, ")" , time, time/5);
 
-            if (dis == { x: 0, y: 0 }) return dis; //if that distance is 0 on both x and y, no scrolling required
+            //if that distance is 0 on both x and y, no scrolling required
+            if (dis == { x: 0, y: 0 }) return dis;
             var clock = function (c, b, a) {
                 window.scrollBy(Math.floor(c.x) / b, Math.floor(c.y) / b);
                 if (a + 1 < b * 5) scrolling = window.setTimeout(clock, 5, c, b, a + 1);
-                //if (a + 1 < b * 5) scrolling = raf(clock, 5, c, b, a + 1);
             };
             scrolling = window.setTimeout(clock, 5, dis, Math.floor(time / 5), 0);
-            //scrolling = raf(clock, 5, dis, Math.floor(time / 5), 0);
             //window.clearInterval(clock);
             return dis;
         },
@@ -185,7 +190,8 @@ direction = function (input, config) {
                 }
             }
             layers[1].width /*= layers[0].width = objref.acW */ = siz[0];
-            layers[1].height = layers[0].height /*= objref.acH*/ = siz[1];
+            layers[1].height /*= objref.acH*/ = siz[1];
+            if(spinner) layers[0].height = siz[1];
             //ctx.drawImage(master, 0, 0);
             ctx.drawImage.apply(ctx, [master, 0, 0].concat(siz));
             
@@ -200,17 +206,19 @@ direction = function (input, config) {
                       if(intervall<0) intervall = window.setInterval(spin, spinner.rate, canvasData);
                       console.log("started",intervall);*/
             spinning = true;
-            //window.setTimeout(spin, spinner.rate, canvasData);
-            raf(spin, canvasData);
-            cb.run("start"); //slidestart();
-            if (idd < 0) idd = 0; //if lower than zero set to zero
-            if (idd >= iimg.length) idd = iimg.length - 1; //can not be equal to our higher than the amount of pages
+            raf(spin);
+            cb.run("start");
+            //if lower than zero set to zero
+            if (idd < 0) idd = 0; 
+            //can not be equal to our higher than the amount of pages
+            if (idd >= iimg.length) idd = iimg.length - 1;
             if (idd < 0) return;
             if (!iimg[idd].ld)
                 ctx.clearRect(0, 0, layers[1].width, layers[1].height);
             imagething.virID = idd;
             imagething.src = options.dir + iimg[idd].s;
-            current = idd; //we change page as soon as it is assigned, so that page still changes even if it never loads
+            //we change page as soon as it is assigned, so that page still changes even if it never loads
+            current = idd;
             /*console.log("----");
                   for(var q = idd-1;q>idd-self.config.irb-1&&q>=0;q--){
                       console.log(q);
@@ -241,7 +249,9 @@ direction = function (input, config) {
                 r++;
             }
         },
-        xtndLmt = function (org, src) {//add value from src if its key exists in org
+        xtndLmt = function (org, src) {
+            //add value from src if its key exists in org
+            if (!org) return;
             for(var key in src) if (org.hasOwnProperty(key)) org[key] = src[key];
         },
         jq = function () {
@@ -358,23 +368,24 @@ direction = function (input, config) {
     this.scrollTo = function (to, time) {
         return scrollit(to, time);
     }; //public wrapper for scrollit
-    //LOADER - setup
-    layers[0].height = 480;
-    //layers[0].width=640;
-    layers[0].style.background = spinner.back;
-    layers[0].style.paddingLeft = "170px";
-    layers[0].style.zIndex = 0;
-    layers[0].style.position = "absolute";
+    
+    if (spinner) {
+        //LOADER - setup
+        layers[0].height = 480;
+        layers[0].style.background = spinner.bck;
+        layers[0].style.paddingLeft = "170px";
+        layers[0].style.zIndex = 0;
+        layers[0].style.position = "absolute";
+    } 
 
     //objref = canvasData;
     //console.log(layers[1]);
     //if (anchor) anchor.appendChild(layers[0]);
-    //else dc.body.appendChild(layers[0]);
-    anchor.appendChild(layers[0]);
+    //else du.body.appendChild(layers[0]);
+    if (spinner) anchor.appendChild(layers[0]);
     //console.log(canvasData);
     //intervall=window.setInterval(spin, spinner.rate, canvasData);
-    //window.setTimeout(spin, spinner.rate, canvasData);
-    raf(spin, canvasData);
+    raf(spin);
     //DISPLAY - setup
     master = new Image();
     master.virID = -1; //unset to an vir image
@@ -403,11 +414,11 @@ direction = function (input, config) {
     //end init
     layers[1].height = 480;
     layers[1].width = 640;
-    layers[1].background = options.back;
+    layers[1].background = options.bck;
     layers[1].style.zIndex = 1;
     layers[1].style.position = "relative";
     //layers[1].style.visibility="hidden";
     //if (anchor) anchor.appendChild(layers[1]);
-    //else dc.body.appendChild(layers[1]);
+    //else du.body.appendChild(layers[1]);
     anchor.appendChild(layers[1]);
 };
