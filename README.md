@@ -1,5 +1,5 @@
 # direction.js
-MicroLib Canvas Carousel built for [comix-ngn] as smaller, canvas only alternative to [Swipe], [Slick], [Bootstrap Carousel], and [other carousels]. < 5 KB minified or your money back!
+MicroLib Canvas Carousel built for [comix-ngn] as a smaller, canvas only alternative to [Swipe], [Slick], [Bootstrap Carousel], and [other carousels]. < 5 KB minified or your money back!
 
 ***Since its Canvas only, it doesn't require any CSS***
 ## Installation
