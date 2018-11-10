@@ -7,19 +7,19 @@
  * @param {string|string[]} [input] - An space delimited list of image sources, or an array of image sources
  * @param {Object}          [config] - Configuration options
  * @param {number}          [config.overwrite] - Integer ID of starting page. [1].
- * @param {HTMLElement}     [config.anchor] - HTMLElement to append the carousel to. [Document.body]
+ * @param {HTMLElement}     [config.anchor] - HTMLElement to append the carousel to. [document.body]
  * @param {string}          [config.dir] - The directory containing the images.
  * @param {number}          [config.imgprebuffer] - The # of images to preload that precede the displayed image. [5]
  * @param {number}          [config.imgpostbuffer] - The # of images to preload that follow the displayed image. [5]
  * @param {string}          [config.back] - Hexstring for the display canvas's color. ["#373737"]
  * [Spinner]
- * @param {boolean}         [config.hideSpin] - Remove the spinner from the page temporarily. 
- * @param {boolean}         [config.disableSpin] - Deactivate the spinner forever.
- * @param {number}          [config.lines] - The # of lines for the spinner.
- * @param {number}          [config.rate] - Speed of spinner relative to refresh rate.
- * @param {number}          [config.diameter] - The diameter of the spinner.
- * @param {string}          [config.loaderback] - Hexstring for the spinner background's color.
- * @param {string}          [config.color] - Hexstring for the spinner's color.
+ * @param {boolean}         [config.hideSpin] - Remove the spinner from the page temporarily. [false]
+ * @param {boolean}         [config.disableSpin] - Deactivate the spinner forever. [false]
+ * @param {number}          [config.lines] - The # of lines for the spinner. [16]
+ * @param {number}          [config.rate] - Speed of spinner relative to refresh rate. [1000/30]
+ * @param {number}          [config.diameter] - The diameter of the spinner. [250]
+ * @param {string}          [config.loaderback] - Hexstring for the spinner background's color. ["#FFF"]
+ * @param {string}          [config.color] - Hexstring for the spinner's color. ["#FFF"]
  * 
  */
 direction = function (input, config) {
@@ -57,7 +57,7 @@ direction = function (input, config) {
             lne: config.lines || 16,
             rte: config.rate || 1000 / 30,
             dia: config.diameter || 250,
-            bck: config.loaderback || "#FFF",
+            lbk: config.loaderback || "#FFF",
         } : null,
         options = {
             dir: config.dir || "",
@@ -289,37 +289,26 @@ direction = function (input, config) {
     this.current = function () {
         return current;
     };
-    this.callback = function (type, callback, index) {
+    this.callback = function (type, callback, index, remove) {
         if (type === null || void 0 === type) return cb.slidn;
+        var typeMap = {"-1": cb.start, "0": cb.slidn, "1": cb.slidd},
+            select = typeMap[index || 0];
+
+        if (remove) {
+            return select.splice(index || select.length - 1, 1);
+        }
 
         if (callback === null || void 0 === callback) {
             return index === null || void 0 === index
-                ? type
-                    ? type > 0
-                        ? cb.slidd[index]
-                        : cb.start[index]
-                    : cb.slidn[index]
-                : type
-                    ? type > 0
-                        ? cb.slidd
-                        : cb.start
-                    : cb.slidn;
+                ? select
+                : select[index];
         }
-
-        if (type && (index === null || void 0 === index)) {
-            if (type > 0) cb.slidd.push(callback);
-            else cb.start.push(callback);
-        } else if (index === null || void 0 === index) cb.slidn.push(callback);
+        
+        if (index === null || void 0 === index) {
+            select.push(callback);
+        } else select[index] = callback;
 
         return 1;
-
-        /*if(type===null||void 0===type) return sliding;
-                if(callback===null||void 0===callback) return (type)?(type>0)?slidend:slidestart:sliding;
-                if(type)
-                    if(type>0) slidend = callback;
-                    else slidestart = callback;
-                else sliding = callback;
-                return 1;*/
     };
     this.go = function (to) {
         var sre = to === null || void 0 === to ? 0 : pi(to, 10);
@@ -372,7 +361,7 @@ direction = function (input, config) {
     if (spinner) {
         //LOADER - setup
         layers[0].height = 480;
-        layers[0].style.background = spinner.bck;
+        layers[0].style.background = spinner.lbk;
         layers[0].style.paddingLeft = "170px";
         layers[0].style.zIndex = 0;
         layers[0].style.position = "absolute";
