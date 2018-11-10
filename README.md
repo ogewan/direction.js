@@ -1,5 +1,5 @@
 # direction.js
-MicroLib Canvas Carousel built for [comix-ngn] as smaller, canvas only alternative to [Swipe], [Slack], [Bootstrap Carousel], and [other carousels]. < 5 KB or your money back!
+MicroLib Canvas Carousel built for [comix-ngn] as smaller, canvas only alternative to [Swipe], [Slick], [Bootstrap Carousel], and [other carousels]. < 5 KB or your money back!
 
 ***Since its Canvas only, it doesn't require any CSS***
 ## Installation
@@ -149,9 +149,9 @@ See https://caniuse.com/#feat=requestanimationframe/.
 * integrate infinite into direction
 
 [comix-ngn]: http://comixngn.js.org/
-[Swipe]: http://kenwheeler.github.io/slick/
+[Slick]: http://kenwheeler.github.io/slick/
 [Google's Closure Compiler]: https://developers.google.com/closure/compiler/
-[Slack]: https://github.com/thebird/swipe
+[Swipe]: https://github.com/thebird/swipe
 [Bootstrap Carousel]: http://getbootstrap.com/javascript/
 [other carousels]: https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=carousels&es_th=1
 [cannot call method 'appendChild' of null]: http://stackoverflow.com/questions/8670530/javascript-error-cannot-call-method-appendchild-of-null
