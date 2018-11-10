@@ -22,7 +22,7 @@
  * @param {string}          [config.color] - Hexstring for the spinner's color. ["#FFF"]
  * 
  */
-direction = function (input, config) {
+direction = function d(input, config) {
     //default parameters
     input = input || [];
     config = config || {};
@@ -255,9 +255,10 @@ direction = function (input, config) {
         },
         jq = function () {
             try {
-                jQuery.fn.direction = function (a, b, c) {
+                jQuery.fn.direction = function (a, c) {
                     return this.each(function () {
-                        direction(a, $(this), b, c);
+                        c.anchor = $(this);
+                        d(a, c);
                     });
                 };
             } catch (e) {
