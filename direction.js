@@ -23,20 +23,20 @@
  * 
  */
 direction = function (input, config) {
+    //default parameters
+    input = input || [];
+    config = config || {};
+
     //redefine globals
     var du = document,
         db = du.body,
         de = du.documentElement,
         pi = parseInt,
-        raf = window.requestAnimationFrame;
-
-    input = input || [];
-    config = config || {};
-    owrite = config.overwrite || 0;
-    anchor = config.anchor || db;
-
+        raf = window.requestAnimationFrame,
     //PROPERTIES - private
-    var iimg = input.slice().map(
+        owrite = config.overwrite || 0,
+        anchor = config.anchor || db,
+        iimg = input.slice().map(
         function(val) {
             return {s: val};
         }),
@@ -72,8 +72,7 @@ direction = function (input, config) {
         master = new Image(),
         skroll = true,
         ctx = layers[1].getContext("2d"),
-        //METHODS - private
-        //n = function(){return 0},//this null fuction save us some bytes
+    //METHODS - private
         cb = {
             run: function (a) {
                 for (var b = 0; b < cb[a].length; b++) {
