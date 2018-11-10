@@ -24,7 +24,7 @@ var foo = new direction(input, config);
 //jQuery
 $("#myCarousel").direction(input, config);
 //*If using jQuery, import it before direction
-//**the anchor option in config is overwritten by the element specified in the selector
+//**Element specified in the selector overrides config.anchor
 ```
 * input - *OPTIONAL* - an array of image sources or a string of image sources seperated by spaces.
 * config - *OPTIONAL* - Unless you supply a formatted object, direction will use default settings. To customize these settings without a formatted object, supply this configuration object.
@@ -53,7 +53,7 @@ This carousel is pretty **barebones**. If you want it to do something, you'll pr
 
 Example: 
 ``` js 
-window.setInterval(foo.next,1000);//Auto scrolls through Webcomic from first to last page
+window.setInterval(foo.next,1000);//Auto scrolls from first to last image
 ```
 
 ## API
