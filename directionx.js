@@ -26,6 +26,8 @@
  * 
  */
 //TODO: Shader change mechanism for pixelfn and shader, including iimg.shaderTime change when shader is changed
+//TODO: Redraw on resize canvas, clear canvas and then draw imageBitmap again with scale equaling new canvas size
+//only body has resize event; <body onresize="myFunction()">, tie canvas size to body size perhaps?
 direction = function d(input = [], config = {}) {
     //METHODS - private
     const spin = () => {
@@ -159,7 +161,7 @@ direction = function d(input = [], config = {}) {
             else {
                 vimg = img;
             }
-
+            //Does not work with CORS, limited to Electron for now (new BrowserWindow({webPreferences: {webSecurity: false}});)
             if (gpu) {
                 const shader = config.shader || function(data) {
                     var x = this.thread.x;
@@ -196,6 +198,7 @@ direction = function d(input = [], config = {}) {
              *  ib: (imageBitmap drawn image)
              * }
              */
+            if (!iimg.length) return;
             spinning = true;
             raf(spin);
             cb.run("start");
