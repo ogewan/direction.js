@@ -347,8 +347,8 @@ direction = function d(input = [], config = {}) {
             
             gpu = new opts.gpu({canvas, webGl});
         }
-        if (opts.shader) config.shader;
-        if (opts.pixelfn) config.pixelfn;
+        if (opts.shader) config.shader = opts.shader;
+        if (opts.pixelfn) config.pixelfn = opts.pixelfn;
     },
     this.cnl = () => {
         //stop scrolling
