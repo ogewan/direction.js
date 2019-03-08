@@ -27,6 +27,7 @@
  */
 //TODO: Shader change mechanism for pixelfn and shader, including iimg.shaderTime change when shader is changed
 //TODO: Redraw on resize canvas, clear canvas and then draw imageBitmap again with scale equaling new canvas size
+//TODO: reduce size from 6 to under 5 kb
 //only body has resize event; <body onresize="myFunction()">, tie canvas size to body size perhaps?
 direction = function d(input = [], config = {}) {
     //METHODS - private
@@ -333,17 +334,22 @@ direction = function d(input = [], config = {}) {
         gpu;
     
     //Library extensions
-    if (config.gpu) {
-        const canvas = new OffscreenCanvas(640, 480),
-            webGl = canvas.getContext('webgl2', {premultipliedAlpha: false});
-        
-        gpu = new config.gpu({canvas, webGl});
-    }
     if (window.jQuery) jq();
     //PROPERTIES - public
     this.canvi = layers;
     this.cb = cb;
     //METHODS - public
+    //TODO: temp patch for shader setup
+    this.setupShaders = (opts) => {
+        if (opts.gpu) {
+            const canvas = new OffscreenCanvas(640, 480),
+                webGl = canvas.getContext('webgl2', {premultipliedAlpha: false});
+            
+            gpu = new opts.gpu({canvas, webGl});
+        }
+        if (opts.shader) config.shader;
+        if (opts.pixelfn) config.pixelfn;
+    },
     this.cnl = () => {
         //stop scrolling
         window.clearTimeout(scrolling);
