@@ -185,6 +185,7 @@ direction = function d(input = [], config = {}) {
                 //RESET canvas to deal with bug
                 render.canvas.width = 1;
                 render.canvas.height = 1;
+                render.maxTexSize = [1, 1];
                 render(vimg.ui.data);
                 createImageBitmap(render.canvas).then(storeImgbit);
             }
