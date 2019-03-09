@@ -182,6 +182,9 @@ direction = function d(input = [], config = {}) {
                     render = gpu.createKernel(shader)
                     .setConstants({w: siz[0], h: siz[1]}).setOutput(siz).setGraphical(true);
 
+                //RESET canvas to deal with bug
+                render.canvas.width = 1;
+                render.canvas.height = 1;
                 render(vimg.ui.data);
                 createImageBitmap(render.canvas).then(storeImgbit);
             }
